@@ -11,7 +11,10 @@
       "mcp__Claude_Preview__preview_start",
       "Bash(npm install:*)",
       "Bash(npx astro:*)",
-      "Bash(ls -la \"C:\\\\Users\\\\yann\\\\OneDrive\\\\Documents\\\\GitHub\\\\Yann-Durandet-Portfolio\\\\dist\"\" && echo \"---\" && cat \"C:UsersyannOneDriveDocumentsGitHubYann-Durandet-Portfoliodistindex.html \")"
+      "Bash(ls -la \"C:\\\\Users\\\\yann\\\\OneDrive\\\\Documents\\\\GitHub\\\\Yann-Durandet-Portfolio\\\\dist\"\" && echo \"---\" && cat \"C:UsersyannOneDriveDocumentsGitHubYann-Durandet-Portfoliodistindex.html \")",
+      "Bash(tr '>' '>\\\\n')",
+      "Bash(python3 -c \":*)",
+      "Bash(node -e \":*)"
     ]
   }
 }

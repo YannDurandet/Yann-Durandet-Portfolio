@@ -1,8 +1,15 @@
 import { ExternalLink, TrendingUp } from "lucide-react";
-import vantageImage from "../assets/vantage-wide.webp";
-import sofiaImage from "../assets/sofia-wide.webp";
-import ditheringImage from "../assets/dithering-wide.webp";
-import artEvasionImage from "../assets/evasion-wide.webp";
+import _vantageImage from "../assets/vantage-wide.webp";
+import _sofiaImage from "../assets/sofia-wide.webp";
+import _ditheringImage from "../assets/dithering-wide.webp";
+import _artEvasionImage from "../assets/evasion-wide.webp";
+
+// Astro returns { src: string } objects for image imports; extract the URL
+const imgSrc = (img: any): string => (typeof img === "string" ? img : img.src);
+const vantageImage = imgSrc(_vantageImage);
+const sofiaImage = imgSrc(_sofiaImage);
+const ditheringImage = imgSrc(_ditheringImage);
+const artEvasionImage = imgSrc(_artEvasionImage);
 import { MountainDivider } from "./ui/MountainDivider";
 import { TechBadge } from "./ui/TechBadge";
 import { useTranslation } from "react-i18next";

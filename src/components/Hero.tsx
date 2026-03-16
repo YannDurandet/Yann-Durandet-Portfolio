@@ -1,14 +1,25 @@
 import { motion } from "motion/react";
 import { ArrowDown, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
-import imgVantageSq from "../assets/vantage-sq.webp";
-import imgVerstappenSq from "../assets/verstappen-sq.webp";
-import imgLunaSq from "../assets/luna-sq.webp";
-import imgGrottiSq from "../assets/grotti-sq.webp";
-import imgEvasionSq from "../assets/evasion-sq.webp";
-import imgDronesSq from "../assets/drones-sq.webp";
-import imgSofiaSq from "../assets/sofia-sq.webp";
-import imgDitherSq from "../assets/dither-sq.webp";
+import _imgVantageSq from "../assets/vantage-sq.webp";
+import _imgVerstappenSq from "../assets/verstappen-sq.webp";
+import _imgLunaSq from "../assets/luna-sq.webp";
+import _imgGrottiSq from "../assets/grotti-sq.webp";
+import _imgEvasionSq from "../assets/evasion-sq.webp";
+import _imgDronesSq from "../assets/drones-sq.webp";
+import _imgSofiaSq from "../assets/sofia-sq.webp";
+import _imgDitherSq from "../assets/dither-sq.webp";
+
+// Astro returns { src: string } objects for image imports; extract the URL
+const imgSrc = (img: any): string => (typeof img === "string" ? img : img.src);
+const imgVantageSq = imgSrc(_imgVantageSq);
+const imgVerstappenSq = imgSrc(_imgVerstappenSq);
+const imgLunaSq = imgSrc(_imgLunaSq);
+const imgGrottiSq = imgSrc(_imgGrottiSq);
+const imgEvasionSq = imgSrc(_imgEvasionSq);
+const imgDronesSq = imgSrc(_imgDronesSq);
+const imgSofiaSq = imgSrc(_imgSofiaSq);
+const imgDitherSq = imgSrc(_imgDitherSq);
 import { socialLinks } from "../data/socialLinks";
 import { scrollToSection } from "../utils/scroll";
 import { MountainDivider } from "./ui/MountainDivider";
