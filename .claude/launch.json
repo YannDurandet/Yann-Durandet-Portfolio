@@ -2,9 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "dev",
-      "runtimeExecutable": "node",
-      "runtimeArgs": ["node_modules/astro/astro.js", "dev"],
+      "name": "static",
+      "runtimeExecutable": "C:\\Python314\\python.exe",
+      "runtimeArgs": ["-m", "http.server", "4321", "--directory", "static"],
       "port": 4321,
       "autoPort": true
     }

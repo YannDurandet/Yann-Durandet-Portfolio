@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — DRNDT Studio</title>
+  <meta name="description" content="Privacy Policy for DRNDT Studio.">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="canonical" href="https://durandet.studio/privacy">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#EFEDE3">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="custom-cursor-dot"></div>
+  <div class="custom-cursor-ring"></div>
+
+  <div class="legal-nav">
+    <a href="/" class="legal-nav-logo"><img src="assets/logo.png" alt="DRNDT Studio"></a>
+    <a href="/" class="legal-nav-home">[ Home ]</a>
+  </div>
+
+  <div class="legal-hero">
+    <div class="container">
+      <h1 style="font-size:3rem"><span data-i18n="privacy.title">Privacy</span> <span class="accent" data-i18n="privacy.titleHighlight">Policy</span></h1>
+      <p style="color:var(--text-secondary);margin-top:1rem" data-i18n="privacy.lastUpdated">Last updated: March 1, 2026</p>
+    </div>
+    <div class="mountain-divider"><svg viewBox="0 0 500 100" preserveAspectRatio="none"><path d="M0,50 L20,40 L40,60 L70,20 L100,50 L130,30 L160,70 L190,40 L220,60 L250,20 L280,50 L310,30 L340,60 L370,40 L400,70 L430,30 L460,60 L500,50 L500,100 L0,100 Z" fill="#EFEDE3"/></svg></div>
+  </div>
+
+  <div class="legal-content">
+    <div class="container-sm">
+      <div class="legal-section">
+        <h3 data-i18n="privacy.intro.title">Introduction</h3>
+        <p data-i18n="privacy.intro.p1">At DRNDT Studio, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website.</p>
+        <p data-i18n="privacy.intro.p2">Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site.</p>
+      </div>
+      <div class="legal-section">
+        <h3 data-i18n="privacy.infoCollection.title">Information We Collect</h3>
+        <p data-i18n="privacy.infoCollection.intro">We may collect information about you in a variety of ways. The information we may collect on the site includes:</p>
+        <p data-i18n="privacy.infoCollection.personalData" data-i18n-html><strong>Personal Data:</strong> Personally identifiable information, such as your name, email address, and contact information that you voluntarily give to us when you contact us or express interest in our services.</p>
+        <p data-i18n="privacy.infoCollection.derivativeData" data-i18n-html><strong>Derivative Data:</strong> Information our servers automatically collect when you access the site, such as your IP address, browser type, operating system, access times, and the pages you have viewed.</p>
+      </div>
+      <div class="legal-section">
+        <h3 data-i18n="privacy.useInfo.title">Use of Your Information</h3>
+        <p data-i18n="privacy.useInfo.intro">Having accurate information about you permits us to provide you with a smooth, efficient, and customized experience. Specifically, we may use information collected about you to:</p>
+        <ul>
+          <li>Respond to your inquiries and provide customer service</li>
+          <li>Send you marketing and promotional communications</li>
+          <li>Improve our website and services</li>
+          <li>Monitor and analyze usage and trends</li>
+        </ul>
+      </div>
+      <div class="legal-section">
+        <h3 data-i18n="privacy.security.title">Security of Your Information</h3>
+        <p data-i18n="privacy.security.p1">We use administrative, technical, and physical security measures to help protect your personal information. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable.</p>
+      </div>
+      <div class="legal-section">
+        <h3 data-i18n="privacy.contact.title">Contact Us</h3>
+        <p data-i18n="privacy.contact.p1">If you have questions or comments about this Privacy Policy, please contact us at:</p>
+        <p><a href="mailto:yann@durandet.studio" class="legal-email">yann@durandet.studio</a></p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer" style="padding:4rem 0">
+    <div class="footer-bg" style="background-image:url('https://images.unsplash.com/photo-1636229645265-22f8ddc61910?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibGFjayUyMHdoaXRlJTIwbW91bnRhaW4lMjBwZWFrc3xlbnwxfHx8fDE3NjM0OTUyNzR8MA&ixlib=rb-4.1.0&q=80&w=1080')"></div>
+    <div class="container relative" style="z-index:10">
+      <div class="footer-copyright" style="text-align:center">
+        <span>&copy; <script>document.write(new Date().getFullYear())</script> DRNDT Studio.</span>
+        <span data-i18n="footer.madeWith">Designed & built by hand in the Alps</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+  <script>
+    // Minimal cursor init for legal pages
+    if (!window.matchMedia('(pointer: coarse)').matches) {
+      const dot = document.querySelector('.custom-cursor-dot');
+      const ring = document.querySelector('.custom-cursor-ring');
+      document.addEventListener('mousemove', e => {
+        dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
+        ring.style.left = e.clientX + 'px'; ring.style.top = e.clientY + 'px';
+      });
+    }
+  </script>
+</body>
+</html>

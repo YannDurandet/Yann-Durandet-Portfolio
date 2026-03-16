@@ -14,7 +14,16 @@
       "Bash(ls -la \"C:\\\\Users\\\\yann\\\\OneDrive\\\\Documents\\\\GitHub\\\\Yann-Durandet-Portfolio\\\\dist\"\" && echo \"---\" && cat \"C:UsersyannOneDriveDocumentsGitHubYann-Durandet-Portfoliodistindex.html \")",
       "Bash(tr '>' '>\\\\n')",
       "Bash(python3 -c \":*)",
-      "Bash(node -e \":*)"
+      "Bash(node -e \":*)",
+      "Bash(mkdir -p static/assets static/css static/js)",
+      "Bash(cp src/assets/*.webp static/assets/)",
+      "Bash(cp src/assets/logo.png static/assets/)",
+      "Bash(cp public/favicon.png static/)",
+      "Bash(cp public/robots.txt static/)",
+      "Bash(cp public/sitemap.xml static/)",
+      "Bash(cp public/CNAME static/)",
+      "Bash(where python:*)",
+      "Bash(where python3:*)"
     ]
   }
 }
