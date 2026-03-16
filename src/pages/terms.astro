@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TermsPage from '../components/TermsPage';
+import '../styles/globals.css';
+---
+
+<BaseLayout
+  title="Conditions Générales d'Utilisation — DRNDT Studio"
+  description="Conditions Générales d'Utilisation du site DRNDT Studio."
+  canonicalUrl="https://durandet.studio/terms"
+>
+  <TermsPage client:load />
+</BaseLayout>

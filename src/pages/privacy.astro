@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PrivacyPage from '../components/PrivacyPage';
+import '../styles/globals.css';
+---
+
+<BaseLayout
+  title="Politique de confidentialité — DRNDT Studio"
+  description="Politique de confidentialité de DRNDT Studio. Comment nous collectons, utilisons et protégeons vos données personnelles."
+  canonicalUrl="https://durandet.studio/privacy"
+>
+  <PrivacyPage client:load />
+</BaseLayout>
