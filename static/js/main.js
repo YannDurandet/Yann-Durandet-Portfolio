@@ -1,15 +1,26 @@
 /* ===== CUBIC BEZIER EASING ===== */
 function cubicBezier(p1x, p1y, p2x, p2y) {
-  // Newton-Raphson iteration for cubic bezier
+  // Sample-based cubic bezier (reliable, no Newton-Raphson edge cases)
+  const SAMPLES = 64;
+  const table = new Float32Array(SAMPLES + 1);
+  for (let i = 0; i <= SAMPLES; i++) {
+    const s = i / SAMPLES;
+    table[i] = 3 * p1x * (1 - s) * (1 - s) * s + 3 * p2x * (1 - s) * s * s + s * s * s;
+  }
   return function (t) {
-    let x = t, i = 0;
-    while (i++ < 8) {
-      const cx = 3*p1x*(1-x)*(1-x)*x + 3*p2x*(1-x)*x*x + x*x*x - t;
-      const dx = 3*p1x*(1-2*x+x*x-2*(1-x)*x) + 3*p2x*(2*(1-x)*x-x*x+2*x*(1-x)-2*x*x) + 3*x*x;
-      if (Math.abs(cx) < 1e-6) break;
-      x -= cx / (dx || 1e-6);
+    if (t <= 0) return 0;
+    if (t >= 1) return 1;
+    // Binary search for the parameter s where bezierX(s) ≈ t
+    let lo = 0, hi = SAMPLES;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (table[mid] < t) lo = mid + 1; else hi = mid;
     }
-    return 3*p1y*(1-x)*(1-x)*x + 3*p2y*(1-x)*x*x + x*x*x;
+    const s0 = (lo - 1) / SAMPLES, s1 = lo / SAMPLES;
+    const x0 = table[lo - 1] || 0, x1 = table[lo];
+    const blend = x1 === x0 ? 0 : (t - x0) / (x1 - x0);
+    const s = s0 + blend * (s1 - s0);
+    return 3 * p1y * (1 - s) * (1 - s) * s + 3 * p2y * (1 - s) * s * s + s * s * s;
   };
 }
 
