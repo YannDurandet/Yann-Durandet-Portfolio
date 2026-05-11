@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conditions Générales d'Utilisation — DRNDT Studio</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#F2EFE5">
+  <link rel="icon" href="assets/icons/logo-black.svg" type="image/svg+xml">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F2EFE5;
+      --text: #302F2C;
+      --text-muted: #43423F;
+      --border: #DDDBD1;
+      --accent: #EE4740;
+      --font: 'Geist', system-ui, sans-serif;
+      --mono: 'Cascadia Mono', 'Courier New', monospace;
+      --serif: 'Instrument Serif', Georgia, serif;
+      --page-padding: clamp(1.25rem, 5vw, 6rem);
+      --max-width: 720px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #302F2C;
+      --text: #DDDBD1;
+      --text-muted: #8A8880;
+      --border: #43423F;
+    }
+
+    html { -webkit-font-smoothing: antialiased; }
+
+    body {
+      font-family: var(--font);
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--text);
+      background: var(--bg);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    a:hover { color: var(--accent); }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem var(--page-padding);
+      border-bottom: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+    }
+
+    .nav__back { color: var(--text-muted); transition: color 0.2s; }
+    .nav__back:hover { color: var(--accent); }
+
+    .nav__actions { display: flex; gap: 1.5rem; }
+
+    .nav__btn {
+      background: none; border: none; padding: 0;
+      font-family: var(--mono); font-size: 0.75rem;
+      letter-spacing: 0.04em; color: var(--text-muted);
+      cursor: pointer; transition: color 0.2s;
+    }
+    .nav__btn:hover { color: var(--accent); }
+
+    .content {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 4rem var(--page-padding) 8rem;
+    }
+
+    .legal-label {
+      font-family: var(--mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .legal-label span { color: var(--accent); }
+
+    h1 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+    }
+
+    .legal-date {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .lang-block { display: none; }
+    .lang-block.is-active { display: block; }
+
+    h2 {
+      font-family: var(--font);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 2.5rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    p { color: var(--text-muted); margin-bottom: 0.75rem; }
+    p strong { color: var(--text); font-weight: 500; }
+
+    ul {
+      list-style: none;
+      margin: 0.5rem 0 0.75rem;
+      padding-left: 1rem;
+    }
+
+    ul li {
+      color: var(--text-muted);
+      position: relative;
+      padding-left: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    ul li::before {
+      content: '—';
+      position: absolute;
+      left: -0.5rem;
+      color: var(--accent);
+      font-size: 0.7em;
+    }
+
+    .email-link { color: var(--accent); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem var(--page-padding);
+      font-family: var(--mono);
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="/" class="nav__back">← durandet.studio</a>
+    <div class="nav__actions">
+      <button class="nav__btn" id="langToggle">[ EN ]</button>
+      <button class="nav__btn" id="themeToggle">[ Dark ]</button>
+    </div>
+  </nav>
+
+  <main class="content">
+
+    <!-- FR -->
+    <div class="lang-block is-active" id="block-fr">
+      <p class="legal-label"><span>02 —</span> Légal</p>
+      <h1>Conditions Générales d'Utilisation</h1>
+      <p class="legal-date">Date d'entrée en vigueur : 1 mars 2026</p>
+
+      <h2>1. Éditeur du site</h2>
+      <p><strong>DURANDET STUDIO</strong><br>
+      SIRET : 99172412100017<br>
+      Email : <a href="mailto:yann@durandet.studio" class="email-link">yann@durandet.studio</a><br>
+      Directeur de la publication : Yann Durandet<br>
+      Hébergeur : Amazon Web Services – Union Européenne</p>
+
+      <h2>2. Objet</h2>
+      <p>Les présentes CGU définissent les conditions d'accès et d'utilisation du site <a href="https://durandet.studio" class="email-link">durandet.studio</a>, portfolio présentant mes services de création et refonte de sites internet.</p>
+
+      <h2>3. Accès au site</h2>
+      <p>L'accès au Site est gratuit et ouvert à tout internaute. Tous les coûts liés à l'accès (matériel, connexion) sont à la charge de l'utilisateur.</p>
+
+      <h2>4. Propriété intellectuelle</h2>
+      <p>L'ensemble du contenu du Site (textes, images, logos, maquettes, code source des exemples présentés) est ma propriété exclusive ou fait l'objet d'une autorisation d'utilisation. Toute reproduction, même partielle, est interdite sans mon accord écrit préalable (art. L.122-4 du Code de la propriété intellectuelle).</p>
+      <p>Les projets clients présentés dans le portfolio sont diffusés avec l'accord écrit des clients concernés.</p>
+
+      <h2>5. Responsabilité</h2>
+      <p>Je m'efforce de maintenir le Site accessible 24h/24, 7j/7, mais sans obligation de résultat. L'accès peut être interrompu pour maintenance ou cas de force majeure sans que ma responsabilité soit engagée.</p>
+      <p>Les liens hypertextes vers des sites tiers n'engagent pas ma responsabilité quant à leur contenu.</p>
+
+      <h2>6. Utilisation du formulaire de contact</h2>
+      <p>L'utilisation du formulaire de contact implique l'acceptation pleine et entière des présentes CGU et de la <a href="privacy.html" class="email-link">Politique de confidentialité</a>. Il est interdit d'utiliser le formulaire à des fins illégales, de spam ou de prospection non sollicitée.</p>
+
+      <h2>7. Droit applicable et juridiction</h2>
+      <p>Les présentes CGU sont régies par le droit français. Tout litige sera soumis aux tribunaux compétents de la ville de Rouen (76000).</p>
+
+      <h2>8. Contact</h2>
+      <p>Pour toute question : <a href="mailto:yann@durandet.studio" class="email-link">yann@durandet.studio</a></p>
+    </div>
+
+    <!-- EN -->
+    <div class="lang-block" id="block-en">
+      <p class="legal-label"><span>02 —</span> Legal</p>
+      <h1>Terms of Use</h1>
+      <p class="legal-date">Effective date: March 1, 2026</p>
+
+      <h2>1. Publisher</h2>
+      <p><strong>DURANDET STUDIO</strong><br>
+      SIRET: 99172412100017<br>
+      Email: <a href="mailto:yann@durandet.studio" class="email-link">yann@durandet.studio</a><br>
+      Publication director: Yann Durandet<br>
+      Hosting: Amazon Web Services – European Union</p>
+
+      <h2>2. Purpose</h2>
+      <p>These Terms of Use define the conditions of access and use of <a href="https://durandet.studio" class="email-link">durandet.studio</a>, a portfolio presenting my web design and redesign services.</p>
+
+      <h2>3. Site access</h2>
+      <p>Access to the Site is free and open to any internet user. All costs related to access (hardware, connection) are the user's responsibility.</p>
+
+      <h2>4. Intellectual property</h2>
+      <p>All Site content (texts, images, logos, mockups, source code of presented examples) is my exclusive property or is used with authorisation. Any reproduction, even partial, is prohibited without my prior written consent (Art. L.122-4 of the French Intellectual Property Code).</p>
+      <p>Client projects shown in the portfolio are published with the written consent of the clients concerned.</p>
+
+      <h2>5. Liability</h2>
+      <p>I make every effort to keep the Site accessible 24/7, without an obligation of result. Access may be interrupted for maintenance or force majeure without engaging my liability.</p>
+      <p>Hyperlinks to third-party sites do not engage my liability regarding their content.</p>
+
+      <h2>6. Use of the contact form</h2>
+      <p>Using the contact form implies full acceptance of these Terms and the <a href="privacy.html" class="email-link">Privacy Policy</a>. Use of the form for illegal purposes, spam, or unsolicited prospecting is strictly prohibited.</p>
+
+      <h2>7. Applicable law and jurisdiction</h2>
+      <p>These Terms are governed by French law. Any dispute shall be submitted to the competent courts of Rouen (76000).</p>
+
+      <h2>8. Contact</h2>
+      <p>For any question: <a href="mailto:yann@durandet.studio" class="email-link">yann@durandet.studio</a></p>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© 2026 DRNDT Studio — <a href="privacy.html">Privacy Policy</a></p>
+  </footer>
+
+  <script>
+    const langToggle = document.getElementById('langToggle');
+    const themeToggle = document.getElementById('themeToggle');
+    const blockFr = document.getElementById('block-fr');
+    const blockEn = document.getElementById('block-en');
+
+    const stored = localStorage.getItem('lang');
+    const detected = (navigator.language || '').startsWith('fr') ? 'fr' : 'en';
+    let lang = stored || detected;
+
+    function applyLang(l) {
+      lang = l;
+      document.documentElement.lang = l;
+      if (l === 'fr') {
+        blockFr.classList.add('is-active');
+        blockEn.classList.remove('is-active');
+        langToggle.textContent = '[ EN ]';
+        document.title = "Conditions Générales d'Utilisation — DRNDT Studio";
+      } else {
+        blockEn.classList.add('is-active');
+        blockFr.classList.remove('is-active');
+        langToggle.textContent = '[ FR ]';
+        document.title = 'Terms of Use — DRNDT Studio';
+      }
+      localStorage.setItem('lang', l);
+    }
+
+    applyLang(lang);
+    langToggle.addEventListener('click', () => applyLang(lang === 'fr' ? 'en' : 'fr'));
+
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    let theme = savedTheme || (prefersDark ? 'dark' : 'light');
+
+    function applyTheme(t) {
+      theme = t;
+      if (t === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '[ Light ]';
+      } else {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '[ Dark ]';
+      }
+      localStorage.setItem('theme', t);
+    }
+
+    applyTheme(theme);
+    themeToggle.addEventListener('click', () => applyTheme(theme === 'dark' ? 'light' : 'dark'));
+  </script>
+</body>
+</html>

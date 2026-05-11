@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Politique de confidentialité — DRNDT Studio</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#F2EFE5">
+  <link rel="icon" href="assets/icons/logo-black.svg" type="image/svg+xml">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F2EFE5;
+      --text: #302F2C;
+      --text-muted: #43423F;
+      --border: #DDDBD1;
+      --accent: #EE4740;
+      --font: 'Geist', system-ui, sans-serif;
+      --mono: 'Cascadia Mono', 'Courier New', monospace;
+      --serif: 'Instrument Serif', Georgia, serif;
+      --page-padding: clamp(1.25rem, 5vw, 6rem);
+      --max-width: 720px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #302F2C;
+      --text: #DDDBD1;
+      --text-muted: #8A8880;
+      --border: #43423F;
+    }
+
+    html { -webkit-font-smoothing: antialiased; }
+
+    body {
+      font-family: var(--font);
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--text);
+      background: var(--bg);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    a:hover { color: var(--accent); }
+
+    /* Nav */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem var(--page-padding);
+      border-bottom: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+    }
+
+    .nav__back { color: var(--text-muted); transition: color 0.2s; }
+    .nav__back:hover { color: var(--accent); }
+
+    .nav__actions { display: flex; gap: 1.5rem; }
+
+    .nav__btn {
+      background: none; border: none; padding: 0;
+      font-family: var(--mono); font-size: 0.75rem;
+      letter-spacing: 0.04em; color: var(--text-muted);
+      cursor: pointer; transition: color 0.2s;
+    }
+    .nav__btn:hover { color: var(--accent); }
+
+    /* Content */
+    .content {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 4rem var(--page-padding) 8rem;
+    }
+
+    .legal-label {
+      font-family: var(--mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .legal-label span { color: var(--accent); }
+
+    h1 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+    }
+
+    .legal-date {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .lang-block { display: none; }
+    .lang-block.is-active { display: block; }
+
+    h2 {
+      font-family: var(--font);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 2.5rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    p { color: var(--text-muted); margin-bottom: 0.75rem; }
+    p strong { color: var(--text); font-weight: 500; }
+
+    ul {
+      list-style: none;
+      margin: 0.5rem 0 0.75rem;
+      padding-left: 1rem;
+    }
+
+    ul li {
+      color: var(--text-muted);
+      position: relative;
+      padding-left: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    ul li::before {
+      content: '—';
+      position: absolute;
+      left: -0.5rem;
+      color: var(--accent);
+      font-size: 0.7em;
+    }
+
+    .email-link { color: var(--accent); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem var(--page-padding);
+      font-family: var(--mono);
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="/" class="nav__back">← durandet.studio</a>
+    <div class="nav__actions">
+      <button class="nav__btn" id="langToggle">[ EN ]</button>
+      <button class="nav__btn" id="themeToggle">[ Dark ]</button>
+    </div>
+  </nav>
+
+  <main class="content">
+
+    <!-- FR -->
+    <div class="lang-block is-active" id="block-fr">
+      <p class="legal-label"><span>01 —</span> Légal</p>
+      <h1>Politique de confidentialité</h1>
+      <p class="legal-date">Dernière mise à jour : 1 mars 2026</p>
+
+      <p>La présente politique vous informe de la manière dont <strong>DURANDET STUDIO</strong>, créateur de sites internet indépendant (ci-après « je » ou « moi »), traite vos données personnelles lorsque vous visitez <a href="https://durandet.studio" class="email-link">durandet.studio</a> et notamment lorsque vous utilisez le formulaire de contact.</p>
+
+      <h2>1. Responsable du traitement</h2>
+      <p><strong>DURANDET STUDIO</strong><br>
+      SIRET : 99172412100017<br>
+      Email : <a href="mailto:yann@durandet.studio" class="email-link">yann@durandet.studio</a></p>
+
+      <h2>2. Données collectées via le formulaire de contact</h2>
+      <p>Lorsque vous remplissez le formulaire de contact, je collecte uniquement :</p>
+      <ul>
+        <li>Nom et prénom</li>
+        <li>Adresse e-mail</li>
+        <li>Message / description de votre projet</li>
+      </ul>
+      <p>Ces données sont collectées avec votre consentement explicite.</p>
+
+      <h2>3. Finalités du traitement</h2>
+      <p>Vos données sont utilisées exclusivement pour répondre à votre demande et, le cas échéant, vous transmettre un devis. Aucune prospection commerciale automatisée n'est réalisée.</p>
+
+      <h2>4. Base juridique</h2>
+      <p>Le traitement repose sur votre consentement (art. 6.1.a du RGPD) et, le cas échéant, sur l'exécution de mesures précontractuelles (art. 6.1.b du RGPD).</p>
+
+      <h2>5. Destinataires des données</h2>
+      <p>Je suis la seule destinataire de vos données. Elles ne sont ni vendues, ni louées, ni transmises à des tiers.<br><br>
+      <strong>Hébergement :</strong> Amazon Web Services – Union Européenne.</p>
+
+      <h2>6. Durée de conservation</h2>
+      <ul>
+        <li>3 ans à compter du dernier contact si aucun contrat n'est conclu</li>
+        <li>En cas de contrat : durée de la relation contractuelle + 5 ans</li>
+      </ul>
+
+      <h2>7. Vos droits</h2>
+      <p>Conformément au RGPD, vous disposez des droits suivants :</p>
+      <ul>
+        <li>Accès, rectification, suppression</li>
+        <li>Retrait du consentement à tout moment</li>
+        <li>Opposition et limitation du traitement</li>
+        <li>Portabilité des données</li>
+        <li>Directives relatives au sort des données après décès</li>
+      </ul>
+      <p>Pour exercer ces droits : <a href="mailto:yann@durandet.studio" class="email-link">yann@durandet.studio</a><br>
+      Vous pouvez également introduire une réclamation auprès de la <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer" class="email-link">CNIL</a>.</p>
+
+      <h2>8. Cookies et traceurs</h2>
+      <p>Ce site n'utilise aucun cookie de traçage (pas de Google Analytics, pas de pixel publicitaire). Seuls les cookies strictement nécessaires au fonctionnement sont utilisés et supprimés à la fermeture du navigateur.</p>
+
+      <h2>9. Sécurité</h2>
+      <p>Je mets en œuvre toutes les mesures techniques appropriées pour protéger vos données : chiffrement TLS, sauvegardes sécurisées, accès restreint.</p>
+
+      <h2>10. Modification de la politique</h2>
+      <p>Je me réserve le droit de modifier cette politique. Toute modification substantielle sera signalée sur le Site.</p>
+    </div>
+
+    <!-- EN -->
+    <div class="lang-block" id="block-en">
+      <p class="legal-label"><span>01 —</span> Legal</p>
+      <h1>Privacy Policy</h1>
+      <p class="legal-date">Last updated: March 1, 2026</p>
+
+      <p>This policy explains how <strong>DURANDET STUDIO</strong>, an independent web designer (hereinafter "I" or "me"), processes your personal data when you visit <a href="https://durandet.studio" class="email-link">durandet.studio</a>, and in particular when you use the contact form.</p>
+
+      <h2>1. Data Controller</h2>
+      <p><strong>DURANDET STUDIO</strong><br>
+      SIRET: 99172412100017<br>
+      Email: <a href="mailto:yann@durandet.studio" class="email-link">yann@durandet.studio</a></p>
+
+      <h2>2. Data collected via the contact form</h2>
+      <p>When you fill in the contact form, I collect only the following:</p>
+      <ul>
+        <li>First and last name</li>
+        <li>Email address</li>
+        <li>Message / project description</li>
+      </ul>
+      <p>This data is collected with your explicit consent.</p>
+
+      <h2>3. Purpose of processing</h2>
+      <p>Your data is used exclusively to respond to your enquiry and, where applicable, send you a quote. No automated commercial prospecting is carried out using this data.</p>
+
+      <h2>4. Legal basis</h2>
+      <p>Processing is based on your consent (Art. 6.1.a GDPR) and, where applicable, on the performance of pre-contractual measures at your request (Art. 6.1.b GDPR).</p>
+
+      <h2>5. Recipients</h2>
+      <p>I am the sole recipient of your data. It is neither sold, rented, nor shared with third parties.<br><br>
+      <strong>Hosting:</strong> Amazon Web Services – European Union.</p>
+
+      <h2>6. Retention period</h2>
+      <ul>
+        <li>3 years from the last point of contact if no contract is signed</li>
+        <li>If a contract is signed: duration of the relationship + 5 years</li>
+      </ul>
+
+      <h2>7. Your rights</h2>
+      <p>Under the GDPR, you have the following rights:</p>
+      <ul>
+        <li>Access, rectification, and erasure</li>
+        <li>Withdrawal of consent at any time</li>
+        <li>Right to object to and restrict processing</li>
+        <li>Data portability</li>
+        <li>Right to define instructions regarding data after death</li>
+      </ul>
+      <p>To exercise these rights: <a href="mailto:yann@durandet.studio" class="email-link">yann@durandet.studio</a><br>
+      You may also file a complaint with the <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer" class="email-link">CNIL</a> (French data protection authority).</p>
+
+      <h2>8. Cookies and trackers</h2>
+      <p>This site uses no tracking cookies (no Google Analytics, no advertising pixel). Only strictly necessary cookies are used and are deleted when you close your browser.</p>
+
+      <h2>9. Security</h2>
+      <p>I implement all appropriate technical measures to protect your data: TLS encryption, secure backups, restricted access.</p>
+
+      <h2>10. Changes to this policy</h2>
+      <p>I reserve the right to modify this policy. Any substantial changes will be notified on the Site.</p>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© 2026 DRNDT Studio — <a href="terms.html">Terms of Use</a></p>
+  </footer>
+
+  <script>
+    const langToggle = document.getElementById('langToggle');
+    const themeToggle = document.getElementById('themeToggle');
+    const blockFr = document.getElementById('block-fr');
+    const blockEn = document.getElementById('block-en');
+
+    // Language — detect or restore
+    const stored = localStorage.getItem('lang');
+    const detected = (navigator.language || '').startsWith('fr') ? 'fr' : 'en';
+    let lang = stored || detected;
+
+    function applyLang(l) {
+      lang = l;
+      document.documentElement.lang = l;
+      if (l === 'fr') {
+        blockFr.classList.add('is-active');
+        blockEn.classList.remove('is-active');
+        langToggle.textContent = '[ EN ]';
+        document.title = 'Politique de confidentialité — DRNDT Studio';
+      } else {
+        blockEn.classList.add('is-active');
+        blockFr.classList.remove('is-active');
+        langToggle.textContent = '[ FR ]';
+        document.title = 'Privacy Policy — DRNDT Studio';
+      }
+      localStorage.setItem('lang', l);
+    }
+
+    applyLang(lang);
+    langToggle.addEventListener('click', () => applyLang(lang === 'fr' ? 'en' : 'fr'));
+
+    // Theme — detect or restore
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    let theme = savedTheme || (prefersDark ? 'dark' : 'light');
+
+    function applyTheme(t) {
+      theme = t;
+      document.body.setAttribute('data-theme', t === 'dark' ? 'dark' : '');
+      if (t !== 'dark') document.body.removeAttribute('data-theme');
+      themeToggle.textContent = t === 'dark' ? '[ Light ]' : '[ Dark ]';
+      localStorage.setItem('theme', t);
+    }
+
+    applyTheme(theme);
+    themeToggle.addEventListener('click', () => applyTheme(theme === 'dark' ? 'light' : 'dark'));
+  </script>
+</body>
+</html>
