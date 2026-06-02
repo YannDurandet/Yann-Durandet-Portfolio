@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sofia by SGS — Case Study | Yann Durandet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#F2EFE5">
+  <link rel="icon" href="assets/favicon.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="Sofia by SGS — Enterprise UX redesign. A 2-year overhaul of SGS's global oil condition monitoring platform, used by 97,000 people across 40+ countries.">
+  <meta name="robots" content="noindex">
+  <style>
+    /* ── Case Study Layout ── */
+    .cs {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 var(--page-padding);
+    }
+
+    .cs-hero {
+      padding: calc(var(--space-xl) + 60px) var(--page-padding) var(--space-lg);
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .cs-hero__back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-lg);
+      transition: color 0.2s ease;
+    }
+
+    .cs-hero__back:hover { color: var(--accent); }
+
+    .cs-hero__badge {
+      margin-bottom: var(--space-sm);
+    }
+
+    .cs-hero__title {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(2.5rem, 7vw, 6rem);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .cs-hero__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+
+    .cs-hero__problem {
+      font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+      font-weight: 300;
+      color: var(--text-secondary);
+      max-width: 60ch;
+      line-height: 1.5;
+      border-left: 2px solid var(--accent);
+      padding-left: var(--space-md);
+    }
+
+    /* ── Placeholder image block ── */
+    .cs-placeholder {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: var(--space-xl) 0;
+    }
+
+    .cs-placeholder--tall {
+      aspect-ratio: 4 / 3;
+    }
+
+    .cs-placeholder__label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      text-align: center;
+      padding: var(--space-md);
+    }
+
+    /* ── Body copy ── */
+    .cs-section {
+      padding: var(--space-xl) 0;
+      border-top: 1px solid var(--bg-secondary);
+    }
+
+    .cs-section__label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: var(--space-lg);
+    }
+
+    .cs-section__title {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 400;
+      color: var(--text-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .cs-body p {
+      color: var(--text-secondary);
+      line-height: 1.75;
+      max-width: 68ch;
+      margin-bottom: var(--space-sm);
+    }
+
+    .cs-body p:last-child { margin-bottom: 0; }
+
+    /* ── Stats row ── */
+    .cs-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-md);
+      padding: var(--space-xl) 0;
+      border-top: 1px solid var(--bg-secondary);
+      border-bottom: 1px solid var(--bg-secondary);
+      margin: var(--space-xl) 0;
+    }
+
+    .cs-stat__number {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .cs-stat__label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+    }
+
+    /* ── Two-col image grid ── */
+    .cs-img-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+      margin: var(--space-xl) 0;
+    }
+
+    /* ── Result callout ── */
+    .cs-result {
+      padding: var(--space-xl) 0;
+      border-top: 1px solid var(--bg-secondary);
+    }
+
+    .cs-result__text {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 400;
+      color: var(--text-primary);
+      max-width: 50ch;
+      line-height: 1.3;
+    }
+
+    /* ── Next project nav ── */
+    .cs-next {
+      padding: var(--space-xl) var(--page-padding);
+      border-top: 1px solid var(--bg-secondary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .cs-next__label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+    }
+
+    .cs-next__link {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(1.25rem, 3vw, 2rem);
+      color: var(--text-primary);
+      transition: color 0.2s ease;
+    }
+
+    .cs-next__link:hover { color: var(--accent); }
+
+    @media (max-width: 768px) {
+      .cs-stats { grid-template-columns: repeat(2, 1fr); }
+      .cs-img-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .cs-stats { grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Preloader -->
+  <div id="preloader" class="preloader" aria-hidden="false">
+    <p class="preloader__tagline">Design is empathy in motion.</p>
+    <img src="assets/icons/logo-white.svg" class="preloader__logo" alt="DRNDT Studio">
+    <div class="preloader__bar-wrap">
+      <div class="preloader__bar-progress"></div>
+    </div>
+  </div>
+
+  <!-- Cursor -->
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
+
+  <!-- Nav -->
+  <nav class="nav" role="navigation">
+    <a href="index.html" class="nav__logo">
+      <img src="assets/icons/logo-black.svg" alt="DRNDT Studio" class="nav__logo-img logo--light">
+      <img src="assets/icons/logo-white.svg" alt="DRNDT Studio" class="nav__logo-img logo--dark">
+    </a>
+    <ul class="nav__links">
+      <li><a href="index.html#work">[ Work ]</a></li>
+      <li><a href="index.html#about">[ About ]</a></li>
+      <li><a href="index.html#contact">[ Contact ]</a></li>
+      <li><a href="index.html#contact" class="nav__cta">Let's work together</a></li>
+      <li><button class="nav__lang-toggle" id="langToggle" data-hoverable aria-label="Switch language to French">[ FR ]</button></li>
+      <li><button class="nav__theme-toggle" id="themeToggle" data-hoverable aria-label="Switch to dark mode">[ Dark ]</button></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <header class="cs-hero">
+    <a href="index.html#work" class="cs-hero__back">← Back to work</a>
+    <p class="badge cs-hero__badge">[ Sector: Enterprise Software ]</p>
+    <h1 class="cs-hero__title">Sofia by SGS</h1>
+    <div class="cs-hero__meta">
+      <span class="badge">[ Role: Lead Designer ]</span>
+      <span class="badge">[ Scope: Full UX + UI ]</span>
+      <span class="badge">[ Timeline: 2023 – 2025 ]</span>
+      <span class="badge">[ Format: Apprenticeship ]</span>
+    </div>
+    <p class="cs-hero__problem">97,000 people used this software every day. Nobody had asked them what they actually needed.</p>
+  </header>
+
+  <!-- Hero image placeholder -->
+  <div class="cs">
+    <div class="cs-placeholder" data-reveal>
+      <p class="cs-placeholder__label">[ Hero — Platform overview screenshot<br>Image to be added by Yann ]</p>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="cs">
+    <div class="cs-stats">
+      <div class="cs-stat" data-reveal>
+        <p class="cs-stat__number">97k</p>
+        <p class="cs-stat__label">Users worldwide</p>
+      </div>
+      <div class="cs-stat" data-reveal>
+        <p class="cs-stat__number">40+</p>
+        <p class="cs-stat__label">Countries</p>
+      </div>
+      <div class="cs-stat" data-reveal>
+        <p class="cs-stat__number">17+</p>
+        <p class="cs-stat__label">Languages supported</p>
+      </div>
+      <div class="cs-stat" data-reveal>
+        <p class="cs-stat__number">2M+</p>
+        <p class="cs-stat__label">Samples processed / year</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section: Context -->
+  <section class="cs">
+    <div class="cs-section" data-reveal>
+      <p class="cs-section__label">01 — Context</p>
+      <h2 class="cs-section__title">What is SOFIA?</h2>
+      <div class="cs-body">
+        <p>SOFIA — Solutions for Oil and Fluid Information Applications — is SGS's global enterprise platform for Oil Condition Monitoring. Maintenance engineers, fleet managers, and industrial operators use it to track the health of machinery oils, greases, and fluids across transportation, wind energy, mining, and marine industries.</p>
+        <p>When a sample comes back abnormal, SOFIA tells you before a turbine fails or an engine seizes. SGS processes over 2 million oil samples a year through the platform, with results available 24/7 across a web dashboard and mobile app.</p>
+        <p>SGS is the world's leading Testing, Inspection and Certification company — one of the most trusted names in industrial quality assurance globally. Sofia is one of their central operational tools.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Challenge -->
+  <section class="cs">
+    <div class="cs-section" data-reveal>
+      <p class="cs-section__label">02 — Challenge</p>
+      <h2 class="cs-section__title">A platform that had outgrown its design.</h2>
+      <div class="cs-body">
+        <p>When I joined SGS as a design apprentice in 2023, Sofia worked — technically. But it had grown faster than its design had. Years of incremental development had left it with inconsistent visual patterns, fragmented navigation logic, no component system, and an interface that had never been intentionally designed for the scale it had reached.</p>
+        <p>97,000 users. 17+ languages. Industries ranging from wind turbine maintenance to marine fleet management. And a design that had never had a dedicated designer behind it.</p>
+        <p>The brief wasn't "make it look nicer." It was: audit everything, understand what's broken, fix it, and ship it globally.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Two-col image grid: before/after placeholder -->
+  <div class="cs">
+    <div class="cs-img-grid">
+      <div class="cs-placeholder cs-placeholder--tall" data-reveal>
+        <p class="cs-placeholder__label">[ Before — existing interface<br>Image to be added by Yann ]</p>
+      </div>
+      <div class="cs-placeholder cs-placeholder--tall" data-reveal>
+        <p class="cs-placeholder__label">[ After — redesigned interface<br>Image to be added by Yann ]</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section: Process -->
+  <section class="cs">
+    <div class="cs-section" data-reveal>
+      <p class="cs-section__label">03 — Process</p>
+      <h2 class="cs-section__title">Two years. Every screen. One designer.</h2>
+      <div class="cs-body">
+        <p>I started with a full UX audit — mapping every screen, every user flow, every friction point. Not to catalogue problems, but to understand the system before touching it. In enterprise software at this scale, an uninformed change creates three new problems for every one it fixes.</p>
+        <p>From the audit came a complete rework of the information architecture: navigation restructured around actual user tasks rather than internal data models. Then a component library built from scratch — the first time Sofia had one.</p>
+        <p>Every screen was redesigned in high fidelity before being handed to development. No handoff gaps, because there was only one designer — I was present through implementation, QA, and the global rollout.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Full-width placeholder: component library -->
+  <div class="cs">
+    <div class="cs-placeholder" data-reveal>
+      <p class="cs-placeholder__label">[ Component library overview<br>Image to be added by Yann ]</p>
+    </div>
+  </div>
+
+  <!-- Section: My work -->
+  <section class="cs">
+    <div class="cs-section" data-reveal>
+      <p class="cs-section__label">04 — Deliverables</p>
+      <h2 class="cs-section__title">What I built.</h2>
+      <div class="cs-body">
+        <p><strong>UX Research & Audit</strong> — Mapped the entire existing platform, identified structural and usability failures, and presented findings to stakeholders before a single pixel changed.</p>
+        <p><strong>Information Architecture</strong> — Rebuilt the navigation and page hierarchy from scratch, prioritising the workflows that 97,000 users actually perform every day.</p>
+        <p><strong>Component Library</strong> — Designed and documented Sofia's first ever shared component system: a reusable set of UI elements built for consistency at scale and long-term maintainability.</p>
+        <p><strong>UI Design</strong> — Full high-fidelity redesign across the entire platform, from dashboard to report detail views, in all supported screen sizes.</p>
+        <p><strong>Design QA</strong> — Stayed involved through implementation to catch regressions and ensure the delivered product matched the design intent.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Two-col: dashboard + report view -->
+  <div class="cs">
+    <div class="cs-img-grid">
+      <div class="cs-placeholder" data-reveal>
+        <p class="cs-placeholder__label">[ Dashboard view<br>Image to be added by Yann ]</p>
+      </div>
+      <div class="cs-placeholder" data-reveal>
+        <p class="cs-placeholder__label">[ Sample report view<br>Image to be added by Yann ]</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile view placeholder -->
+  <div class="cs">
+    <div class="cs-placeholder" data-reveal>
+      <p class="cs-placeholder__label">[ Mobile app view<br>Image to be added by Yann ]</p>
+    </div>
+  </div>
+
+  <!-- Result callout -->
+  <div class="cs">
+    <div class="cs-result" data-reveal>
+      <p class="cs-result__text">"The redesigned Sofia shipped to a global rollout without a single major regression in user feedback. For a platform at that scale, that's not a given."</p>
+    </div>
+  </div>
+
+  <!-- Section: Outcome -->
+  <section class="cs">
+    <div class="cs-section" data-reveal>
+      <p class="cs-section__label">05 — Outcome</p>
+      <h2 class="cs-section__title">Shipped. Globally. Clean.</h2>
+      <div class="cs-body">
+        <p>The redesigned platform went live across SGS's global network without a significant regression in user feedback — a meaningful benchmark for an enterprise tool at this scale, used daily by nearly 100,000 people with no tolerance for downtime or confusion.</p>
+        <p>The component library built during the project is now the design foundation for ongoing Sofia development. The information architecture rebuilt from scratch became the navigation structure shipped in the final product.</p>
+        <p>Two years. One designer. Every screen.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Next project -->
+  <nav class="cs-next" aria-label="Next project">
+    <p class="cs-next__label">[ Next ]</p>
+    <a href="index.html#work" class="cs-next__link">Back to all work →</a>
+  </nav>
+
+  <!-- Footer (same as index.html) -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <img src="assets/icons/logo-black.svg" alt="DRNDT Studio" class="footer__logo logo--light">
+          <img src="assets/icons/logo-white.svg" alt="DRNDT Studio" class="footer__logo logo--dark">
+        </div>
+        <div class="footer__col">
+          <p class="footer__col-title">[ Legal ]</p>
+          <ul class="footer__links">
+            <li><a href="privacy.html">Privacy</a></li>
+            <li><a href="terms.html">Terms</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <p class="footer__col-title">[ Projects ]</p>
+          <ul class="footer__links">
+            <li><a href="https://yanndurandet.me/racing" target="_blank" rel="noopener noreferrer">Department of Racing Drivers</a></li>
+            <li><a href="https://yanndurandet.me/8bitseditor/" target="_blank" rel="noopener noreferrer">8 bits image editor</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <p class="footer__col-title">[ Socials ]</p>
+          <ul class="footer__links">
+            <li><a href="https://instagram.com/durandet.studio" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            <li><a href="https://www.linkedin.com/in/yann-durandet-web-designer/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+            <li><a href="https://contra.com/community/profile/yann_durandet_ecjbh640" target="_blank" rel="noopener noreferrer">Contra</a></li>
+            <li><a href="https://www.malt.fr/profile/yanndurandet" target="_blank" rel="noopener noreferrer">Malt</a></li>
+            <li><a href="https://x.com/YannDurandet" target="_blank" rel="noopener noreferrer">X</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__tagline">"Design is empathy in motion."</p>
+        <p class="footer__copy">© 2026 DRNDT Studio — Designed &amp; built with too much caffeine</p>
+        <!-- Mobile-visible toggles -->
+        <div class="footer__mobile-toggles">
+          <button class="footer__toggle-btn" id="langToggleMobile" aria-label="Switch language to French">[ FR ]</button>
+          <button class="footer__toggle-btn" id="themeToggleMobile" aria-label="Switch to dark mode">[ Dark ]</button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

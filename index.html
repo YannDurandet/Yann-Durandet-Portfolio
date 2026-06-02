@@ -59,10 +59,12 @@
 <body>
 
   <!-- Preloader -->
-  <div id="preloader" class="preloader">
+  <div id="preloader" class="preloader" aria-hidden="false">
     <p class="preloader__tagline">Design is empathy in motion.</p>
-    <img src="assets/icons/logo-white.svg" class="preloader__tagline" alt="DRNDT Studio">
-
+    <img src="assets/icons/logo-white.svg" class="preloader__logo" alt="DRNDT Studio">
+    <div class="preloader__bar-wrap">
+      <div class="preloader__bar-progress"></div>
+    </div>
   </div>
 
   <!-- Cursor -->
@@ -93,10 +95,10 @@
       <span class="altimeter__label label-mono">Alt</span>
       <div class="alt-inline">
         <span class="altimeter__value">0</span>
-        <span class="altimeter__unit" data-hoverable>m</span>
+        <span class="altimeter__unit" data-hoverable role="button" tabindex="0" aria-label="Toggle altitude unit">m</span>
       </div>
     </div>
-    <div class="altimeter__bar">
+    <div class="altimeter__bar" role="button" tabindex="0" aria-label="Toggle altitude unit">
       <div class="altimeter__bar-fill"></div>
     </div>
   </div>
@@ -119,174 +121,276 @@
 
   <!-- Work -->
   <section class="work" id="work">
-    <h2 class="section-label" data-reveal><span class="section-number" aria-hidden="true">01 —</span> <span
-        data-i18n="work-label">[ Selected Work ]</span></h2>
-    <div class="work__counter" aria-hidden="true">
-      <span class="work__counter-current">00</span><span class="work__counter-total">/03</span>
-    </div>
-    <div class="work__list">
-      <a href="#sofia" class="work__item" data-reveal data-image="assets/main-work/sofia-full.webp">
-        <span class="work__name">Sofia by SGS</span>
-        <span class="work__category badge" data-i18n="work-cat-sofia">[ Enterprise UX ]</span>
-        <span class="work__detail">2023 - 2025</span>
-      </a>
-      <a href="#sonar" class="work__item" data-reveal data-image="assets/main-work/sonar/sonar_full.jpg">
-        <span class="work__name">SONAR</span>
-        <span class="work__category badge" data-i18n="work-cat-sonar">[ Brand Design ]</span>
-        <span class="work__detail">2025</span>
-      </a>
-      <a href="#vantage" class="work__item" data-reveal data-image="assets/main-work/vantage.webp">
-        <span class="work__name">Vantage Automobiles</span>
-        <span class="work__category badge" data-i18n="work-cat-vantage">[ Brand Identity ]</span>
-        <span class="work__detail">2025</span>
-      </a>
-      <a href="#dord" class="work__item" data-reveal data-image="assets/main-work/racing.webp">
-        <span class="work__name">Department of Racing Drivers</span>
-        <span class="work__category badge" data-i18n="work-cat-dord">[ Personal ]</span>
-        <span class="work__detail">2026</span>
-      </a>
-      <p class="experiments-line" data-reveal data-i18n-html="experiments-line">+ Various experiments and design
-        snippets — available on my <a href="https://instagram.com/durandet.studio" class="inline__link" target="_blank"
-          rel="noopener noreferrer">Instagram</a></p>
-    </div>
-    <div class="work__hover-float" aria-hidden="true">
-      <img class="work__hover-img" src="" alt="">
-    </div>
-  </section>
-
-  <!-- Case Study — Sofia -->
-  <section class="case-study" id="sofia">
-    <header data-reveal>
-      <p class="badge" data-i18n="sofia-badge">[ Sector: Enterprise UX ]</p>
-      <h2 class="case-study__title">Sofia by SGS</h2>
-      <div class="case-study__meta">
-        <span class="case-study__meta-item" data-i18n="sofia-meta-role">[ Role: Lead Designer ]</span>
-        <span class="case-study__meta-item" data-i18n="sofia-meta-scope">[ Scope: UX + UI ]</span>
-        <span class="case-study__meta-item" data-i18n="sofia-meta-timeline">[ Timeline: 2 years ]</span>
-        <span class="case-study__meta-item" data-i18n="sofia-meta-users">[ Users: 30,000+ ]</span>
-      </div>
-      <p class="case-study__problem" data-i18n="sofia-problem">Tens of thousands of people used this software every day.
-        Nobody had asked them what they actually needed.</p>
-    </header>
-    <div class="sofia-parallax" data-reveal aria-label="Sofia login screen — SGS platform">
-      <div class="sofia-layer sofia-layer--bg"
-        style="background-image: url(assets/main-work/sofia/sofia-background.webp);"></div>
-      <div class="sofia-layer sofia-layer--map">
-        <img src="assets/main-work/sofia/sofia-map.webp" alt="Sofia platform interactive map view — SGS enterprise UX"
-          loading="lazy">
-      </div>
-      <div class="sofia-layer sofia-layer--ui">
-        <img src="assets/main-work/sofia/sofia-ui.webp"
-          alt="Sofia platform UI redesign by Yann Durandet — SGS 2023–2025" loading="lazy">
-      </div>
-    </div>
-    <p class="case-study__caption" data-i18n="sofia-caption">[ Sofia platform, SGS — 2023–2025 ]</p>
-    <div class="case-study__body">
-      <p data-reveal data-i18n="sofia-p1">Sofia is SGS's global enterprise platform, used by over 30,000 people across
-        40 countries. When I joined, it had grown faster than its design had — functional, but fractured.</p>
-      <p data-reveal data-i18n="sofia-p2">Over two years, I rebuilt it from the inside out. Every screen audited. Every
-        interaction reconsidered. The work spanned UX research, information architecture, component design, and final UI
-        delivery — with no handoff gaps, because there was only one designer.</p>
-      <p data-reveal data-i18n="sofia-p3">The redesigned Sofia shipped to a global rollout without a single major
-        regression in user feedback. For a platform at that scale, that's not a given — it's the result of two years of
-        not cutting corners.</p>
-    </div>
-  </section>
-
-  <!-- Case Study — SONAR -->
-  <section class="case-study" id="sonar">
-    <header data-reveal>
-      <p class="badge" data-i18n="sonar-badge">[ Sector: Software ]</p>
-      <h2 class="case-study__title">SONAR</h2>
-      <div class="case-study__meta">
-        <span class="case-study__meta-item" data-i18n="sonar-meta-perimeter">[ Perimeter: Branding ]</span>
-        <span class="case-study__meta-item" data-i18n="sonar-meta-time">[ Time: 2 months ]</span>
-      </div>
-      <p class="case-study__problem" data-i18n="sonar-problem">A brand that hears what others miss.</p>
-    </header>
-    <div class="sonar-parallax" data-reveal aria-label="SONAR brand identity">
-      <div class="sonar-layer sonar-layer--bg"
-        style="background-image: url(assets/main-work/sonar/sonar_background.jpg);"></div>
-      <div class="sonar-layer sonar-layer--rings">
-        <div class="ring"></div>
-        <div class="ring"></div>
-        <div class="ring"></div>
-        <div class="ring"></div>
-      </div>
-      <div class="sonar-layer sonar-layer--logo">
-        <img src="assets/main-work/sonar/sonar_logo.svg" alt="SONAR brand logo — brand identity design 2025"
-          loading="lazy">
-      </div>
-    </div>
-    <p class="case-study__caption" data-i18n="sonar-caption">[ SONAR — Brand Design, 2025 ]</p>
-    <div class="case-study__body">
-      <p data-reveal data-i18n="sonar-p1">SONAR is built around precision detection — the ability to read what's beneath
-        the surface. Where others see noise, SONAR finds signal. A brand for those who listen differently.</p>
-    </div>
-  </section>
-
-  <!-- Project Card — Vantage -->
-  <section class="project-card" id="vantage">
-    <div data-reveal>
-      <p class="badge project-card__badge" data-i18n="vantage-badge">[ Brand Identity ]</p>
-      <h2 class="project-card__title">Vantage Automobiles</h2>
-      <img src="assets/main-work/vantage.webp" alt="Vantage Automobiles brand identity and logo design"
-        class="project-card__image" loading="lazy">
-      <div class="project-card__body">
-        <p data-i18n="vantage-p1">Vantage sources high-end vehicles from across Europe for clients in Normandy —
-          privately, precisely, without the dealership experience. They needed a brand that felt as considered as their
-          service.</p>
-        <p data-i18n="vantage-p2">I built their identity from scratch: naming direction, logo, colour system, and visual
-          language. The brief was trust before a word is spoken.</p>
-      </div>
-      <p class="project-card__result" data-i18n="vantage-result">Brand live — currently sourcing clients across Normandy
-      </p>
-    </div>
-  </section>
-
-  <!-- Project Card — Department of Racing Drivers -->
-  <section class="project-card" id="dord">
-    <div data-reveal>
-      <p class="badge project-card__badge" data-i18n="dord-badge">[ Personal — Ongoing ]</p>
-      <h2 class="project-card__title">Department of Racing Drivers</h2>
-      <img src="assets/main-work/racing.webp"
-        alt="Department of Racing Drivers — motorsports news and calendar website design" class="project-card__image"
-        loading="lazy">
-      <div class="project-card__body">
-        <p data-i18n="dord-p1">A motorsports news and calendar site I run because I wanted to build something for an
-          audience I'm already part of. Design, content, and code — all mine.</p>
-      </div>
-      <p class="project-card__result" data-i18n="dord-result">Growing audience — built entirely in personal time</p>
-    </div>
-  </section>
-
-  <!-- Archive -->
-  <section class="archive" id="archive">
     <h2 class="section-label" data-reveal>
-      <span class="section-number" aria-hidden="true">—</span>
-      <span>[ Archive ]</span>
+      <span class="section-number" aria-hidden="true">01 —</span>
+      <span data-i18n="work-label">[ Selected Work ]</span>
     </h2>
-    <div class="archive__grid">
-      <div class="archive__item" data-reveal>
-        <div class="archive__img-wrap">
-          <img src="assets/work-grid/jewelry.webp" alt="Jewelry project" loading="lazy">
-          <span class="archive__name">[ Bijouterie Luna Leaf ]</span>
+    <div class="work__grid">
+
+      <a href="sofia.html" class="work__grid-item" data-reveal>
+        <div class="work__grid-img-wrap">
+          <img
+            src="assets/work/sofia-sgs-1920px.webp"
+            srcset="assets/work/sofia-sgs-960px.webp 960w,
+                    assets/work/sofia-sgs-1920px.webp 1920w"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            alt="Sofia by SGS — Enterprise UX platform redesign"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+        <div class="work__grid-meta">
+          <span class="work__grid-name">Sofia by SGS</span>
+          <span class="badge">[ Enterprise UX ]</span>
+        </div>
+      </a>
+
+      <div class="work__grid-item" data-reveal>
+        <div class="work__grid-img-wrap">
+          <img
+            src="assets/work/sonar-branding-logo-1920px.webp"
+            srcset="assets/work/sonar-branding-logo-960px.webp 960w,
+                    assets/work/sonar-branding-logo-1920px.webp 1920w"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            alt="SONAR — Brand identity design 2025"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+        <div class="work__grid-meta">
+          <span class="work__grid-name">SONAR</span>
+          <span class="badge">[ Brand Design ]</span>
         </div>
       </div>
-      <div class="archive__item" data-reveal>
-        <div class="archive__img-wrap">
-          <img src="assets/work-grid/petanque.webp" alt="Pétanque project" loading="lazy">
-          <span class="archive__name">[ Association de Petanque ]</span>
+
+      <div class="work__grid-item" data-reveal>
+        <div class="work__grid-img-wrap">
+          <img
+            src="assets/work/vantage-1920px.webp"
+            srcset="assets/work/vantage-960px.webp 960w,
+                    assets/work/vantage-1920px.webp 1920w"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            alt="Vantage Automobiles — Brand identity"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+        <div class="work__grid-meta">
+          <span class="work__grid-name">Vantage Automobiles</span>
+          <span class="badge">[ Brand Identity ]</span>
         </div>
       </div>
-      <div class="archive__item" data-reveal>
-        <div class="archive__img-wrap">
-          <img src="assets/work-grid/restaurant.webp" alt="Restaurant project" loading="lazy">
-          <span class="archive__name">[ Restaurant Philippe ]</span>
+
+      <div class="work__grid-item" data-reveal>
+        <div class="work__grid-img-wrap">
+          <img
+            src="assets/work/dord-branding-1920px.webp"
+            srcset="assets/work/dord-branding-960px.webp 960w,
+                    assets/work/dord-branding-1920px.webp 1920w"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            alt="Department of Racing Drivers — Branding and website"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+        <div class="work__grid-meta">
+          <span class="work__grid-name">Department of Racing Drivers</span>
+          <span class="badge">[ Personal ]</span>
         </div>
       </div>
+
+      <div class="work__grid-item" data-reveal>
+        <div class="work__grid-img-wrap">
+          <img
+            src="assets/work/everium-1920px.webp"
+            srcset="assets/work/everium-960px.webp 960w,
+                    assets/work/everium-1920px.webp 1920w"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            alt="Everium — Sport app design"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+        <div class="work__grid-meta">
+          <span class="work__grid-name">Everium</span>
+          <span class="badge">[ App Design ]</span>
+        </div>
+      </div>
+
+      <div class="work__grid-item" data-reveal>
+        <div class="work__grid-img-wrap">
+          <img
+            src="assets/work/grotti-1920px.webp"
+            srcset="assets/work/grotti-960px.webp 960w,
+                    assets/work/grotti-1920px.webp 1920w"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            alt="Grotti — Motorsport brand identity"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+        <div class="work__grid-meta">
+          <span class="work__grid-name">Grotti</span>
+          <span class="badge">[ Brand Identity ]</span>
+        </div>
+      </div>
+
+      <div class="work__grid-item" data-reveal>
+        <div class="work__grid-img-wrap">
+          <img
+            src="assets/work/bijouterie-luna-leaf-1920px.webp"
+            srcset="assets/work/bijouterie-luna-leaf-960px.webp 960w,
+                    assets/work/bijouterie-luna-leaf-1920px.webp 1920w"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            alt="Bijouterie Luna Leaf — Brand identity"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+        <div class="work__grid-meta">
+          <span class="work__grid-name">Bijouterie Luna Leaf</span>
+          <span class="badge">[ Brand Identity ]</span>
+        </div>
+      </div>
+
+      <div class="work__grid-item" data-reveal>
+        <div class="work__grid-img-wrap">
+          <img
+            src="assets/work/singe-racing-1920px.webp"
+            srcset="assets/work/singe-racing-960px.webp 960w,
+                    assets/work/singe-racing-1920px.webp 1920w"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            alt="Singe Racing — Merch and brand identity"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+        <div class="work__grid-meta">
+          <span class="work__grid-name">Singe Racing</span>
+          <span class="badge">[ Brand Identity ]</span>
+        </div>
+      </div>
+
+      <div class="work__grid-item" data-reveal>
+        <div class="work__grid-img-wrap">
+          <img
+            src="assets/work/zigzaggo-1920px.webp"
+            srcset="assets/work/zigzaggo-960px.webp 960w,
+                    assets/work/zigzaggo-1920px.webp 1920w"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            alt="Zigzaggo — Brand identity and mockup"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+        <div class="work__grid-meta">
+          <span class="work__grid-name">Zigzaggo</span>
+          <span class="badge">[ Brand Identity ]</span>
+        </div>
+      </div>
+
+      <div class="work__grid-item" data-reveal>
+        <div class="work__grid-img-wrap">
+          <img
+            src="assets/work/petanque-1920px.webp"
+            srcset="assets/work/petanque-960px.webp 960w,
+                    assets/work/petanque-1920px.webp 1920w"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            alt="Association de Pétanque — Brand identity"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+        <div class="work__grid-meta">
+          <span class="work__grid-name">Association de Pétanque</span>
+          <span class="badge">[ Brand Identity ]</span>
+        </div>
+      </div>
+
+      <div class="work__grid-item" data-reveal>
+        <div class="work__grid-img-wrap">
+          <img
+            src="assets/work/restaurant-philippe-1920px.webp"
+            srcset="assets/work/restaurant-philippe-960px.webp 960w,
+                    assets/work/restaurant-philippe-1920px.webp 1920w"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            alt="Restaurant Philippe — Brand identity"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+        <div class="work__grid-meta">
+          <span class="work__grid-name">Restaurant Philippe</span>
+          <span class="badge">[ Brand Identity ]</span>
+        </div>
+      </div>
+
+      <div class="work__grid-item" data-reveal>
+        <div class="work__grid-img-wrap">
+          <img
+            src="assets/work/art-evasion-nature-1920px.webp"
+            srcset="assets/work/art-evasion-nature-960px.webp 960w,
+                    assets/work/art-evasion-nature-1920px.webp 1920w"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            alt="Art Evasion Nature — Logo design"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+        <div class="work__grid-meta">
+          <span class="work__grid-name">Art Evasion Nature</span>
+          <span class="badge">[ Brand Identity ]</span>
+        </div>
+      </div>
+
+      <div class="work__grid-item" data-reveal>
+        <div class="work__grid-img-wrap">
+          <img
+            src="assets/work/drones-focus-1920px.webp"
+            srcset="assets/work/drones-focus-960px.webp 960w,
+                    assets/work/drones-focus-1920px.webp 1920w"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            alt="Drones Focus — Logo and brand mockup"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+        <div class="work__grid-meta">
+          <span class="work__grid-name">Drones Focus</span>
+          <span class="badge">[ Brand Identity ]</span>
+        </div>
+      </div>
+
+      <div class="work__grid-item" data-reveal>
+        <div class="work__grid-img-wrap">
+          <img
+            src="assets/work/poster-f1-1920px.webp"
+            srcset="assets/work/poster-f1-960px.webp 960w,
+                    assets/work/poster-f1-1920px.webp 1920w"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            alt="F1 Verstappen — Poster illustration"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+        <div class="work__grid-meta">
+          <span class="work__grid-name">F1 Verstappen Poster</span>
+          <span class="badge">[ Illustration ]</span>
+        </div>
+      </div>
+
     </div>
   </section>
+
+
+
+
+
+
+
+
+
+
 
   <!-- Quote -->
   <section class="pullquote" aria-label="Quote">
@@ -412,7 +516,7 @@
             <li><a href="https://www.linkedin.com/in/yann-durandet-web-designer/" target="_blank"
                 rel="noopener noreferrer">LinkedIn</a></li>
             <li><a href="https://contra.com/community/profile/yann_durandet_ecjbh640" target="_blank"
-                rel="noopener noreferrer">Contra</a></li>
+                rel="noopener noreferrer">Contr                rel="noopener noreferrer">Contra</a></li>
             <li><a href="https://www.malt.fr/profile/yanndurandet" target="_blank" rel="noopener noreferrer">Malt</a>
             </li>
             <li><a href="https://x.com/YannDurandet" target="_blank" rel="noopener noreferrer">X</a></li>
@@ -424,6 +528,10 @@
         <p class="footer__tagline" data-i18n="footer-tagline">"Design is empathy in motion."</p>
         <p class="footer__copy" data-i18n="footer-copy">© 2026 DRNDT Studio — Designed &amp; built with too much
           caffeine</p>
+        <div class="footer__mobile-toggles">
+          <button class="footer__toggle-btn" id="langToggleMobile" aria-label="Switch language to French">[ FR ]</button>
+          <button class="footer__toggle-btn" id="themeToggleMobile" aria-label="Switch to dark mode">[ Dark ]</button>
+        </div>
       </div>
     </div>
   </footer>
