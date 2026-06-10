@@ -8,12 +8,28 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
-  <meta name="theme-color" content="#F2EFE5">
+  <meta name="theme-color" content="#F0EAD8">
   <link rel="icon" href="assets/favicon.jpg" type="image/jpeg">
   <link rel="stylesheet" href="style.css">
   <meta name="description" content="Sofia by SGS — Enterprise UX redesign. A 2-year overhaul of SGS's global oil condition monitoring platform, used by 97,000 people across 40+ countries.">
   <meta name="robots" content="noindex">
   <style>
+    :root {
+      --bg: #F0EAD8;
+      --text: #212622;
+      --text-muted: #4E5E4E;
+      --border: #E2DAC8;
+      --accent: #D25530;
+      /* keep all other tokens (font, spacing, etc.) unchanged */
+    }
+
+    [data-theme="dark"] {
+      --bg: #212622;
+      --text: #EDE7D8;
+      --text-muted: #8A9E8A;
+      --border: #334A33;
+    }
+
     /* ── Case Study Layout ── */
     .cs {
       max-width: var(--max-width);
@@ -73,28 +89,18 @@
       padding-left: var(--space-md);
     }
 
-    /* ── Placeholder image block ── */
-    .cs-placeholder {
+    /* ── Case study images ── */
+    .cs-img {
       width: 100%;
-      aspect-ratio: 16 / 9;
-      background: var(--bg-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
       margin: var(--space-xl) 0;
+      border: 0;
+      padding: 0;
     }
 
-    .cs-placeholder--tall {
-      aspect-ratio: 4 / 3;
-    }
-
-    .cs-placeholder__label {
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      letter-spacing: 0.1em;
-      color: var(--text-secondary);
-      text-align: center;
-      padding: var(--space-md);
+    .cs-img img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
 
     /* ── Body copy ── */
@@ -268,9 +274,15 @@
 
   <!-- Hero image placeholder -->
   <div class="cs">
-    <div class="cs-placeholder" data-reveal>
-      <p class="cs-placeholder__label">[ Hero — Platform overview screenshot<br>Image to be added by Yann ]</p>
-    </div>
+    <figure class="cs-img" data-reveal>
+      <img
+        src="assets/work/sofia-page/header.webp"
+        srcset="assets/work/sofia-page/header-mini.webp 960w, assets/work/sofia-page/header.webp 1920w"
+        sizes="(max-width: 768px) 100vw, var(--max-width)"
+        alt="Sofia platform — dashboard overview"
+        width="1920" height="1080"
+        loading="eager" decoding="async">
+    </figure>
   </div>
 
   <!-- Stats -->
@@ -324,12 +336,24 @@
   <!-- Two-col image grid: before/after placeholder -->
   <div class="cs">
     <div class="cs-img-grid">
-      <div class="cs-placeholder cs-placeholder--tall" data-reveal>
-        <p class="cs-placeholder__label">[ Before — existing interface<br>Image to be added by Yann ]</p>
-      </div>
-      <div class="cs-placeholder cs-placeholder--tall" data-reveal>
-        <p class="cs-placeholder__label">[ After — redesigned interface<br>Image to be added by Yann ]</p>
-      </div>
+      <figure class="cs-img" data-reveal>
+        <img
+          src="assets/work/sofia-page/before.webp"
+          srcset="assets/work/sofia-page/before-mini.webp 424w, assets/work/sofia-page/before.webp 848w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          alt="Sofia — interface before redesign"
+          width="848" height="1020"
+          loading="lazy" decoding="async">
+      </figure>
+      <figure class="cs-img" data-reveal>
+        <img
+          src="assets/work/sofia-page/after.webp"
+          srcset="assets/work/sofia-page/after-mini.webp 424w, assets/work/sofia-page/after.webp 848w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          alt="Sofia — interface after redesign"
+          width="848" height="1020"
+          loading="lazy" decoding="async">
+      </figure>
     </div>
   </div>
 
@@ -348,9 +372,15 @@
 
   <!-- Full-width placeholder: component library -->
   <div class="cs">
-    <div class="cs-placeholder" data-reveal>
-      <p class="cs-placeholder__label">[ Component library overview<br>Image to be added by Yann ]</p>
-    </div>
+    <figure class="cs-img" data-reveal>
+      <img
+        src="assets/work/sofia-page/iconset.webp"
+        srcset="assets/work/sofia-page/iconset-mini.webp 960w, assets/work/sofia-page/iconset.webp 1920w"
+        sizes="(max-width: 768px) 100vw, var(--max-width)"
+        alt="Sofia — component library and icon set overview"
+        width="1920" height="1080"
+        loading="lazy" decoding="async">
+    </figure>
   </div>
 
   <!-- Section: My work -->
@@ -368,23 +398,17 @@
     </div>
   </section>
 
-  <!-- Two-col: dashboard + report view -->
-  <div class="cs">
-    <div class="cs-img-grid">
-      <div class="cs-placeholder" data-reveal>
-        <p class="cs-placeholder__label">[ Dashboard view<br>Image to be added by Yann ]</p>
-      </div>
-      <div class="cs-placeholder" data-reveal>
-        <p class="cs-placeholder__label">[ Sample report view<br>Image to be added by Yann ]</p>
-      </div>
-    </div>
-  </div>
-
   <!-- Mobile view placeholder -->
   <div class="cs">
-    <div class="cs-placeholder" data-reveal>
-      <p class="cs-placeholder__label">[ Mobile app view<br>Image to be added by Yann ]</p>
-    </div>
+    <figure class="cs-img" data-reveal>
+      <img
+        src="assets/work/sofia-page/mockup-mobile.webp"
+        srcset="assets/work/sofia-page/mockup-mobile-mini.webp 960w, assets/work/sofia-page/mockup-mobile.webp 1920w"
+        sizes="(max-width: 768px) 100vw, var(--max-width)"
+        alt="Sofia — mobile app view"
+        width="1920" height="1080"
+        loading="lazy" decoding="async">
+    </figure>
   </div>
 
   <!-- Result callout -->

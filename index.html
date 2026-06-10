@@ -10,7 +10,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@1&display=swap"
     rel="stylesheet">
-  <meta name="theme-color" content="#F2EFE5">
+  <meta name="theme-color" content="#F0EAD8">
   <link rel="icon" href="assets/favicon.jpg" type="image/jpeg">
   <link rel="stylesheet" href="style.css">
   <meta name="description"
@@ -116,6 +116,9 @@
     <div class="hero__chevron" aria-hidden="true">
       <span></span>
       <span></span>
+    </div>
+    <div class="hero__painting" aria-hidden="true">
+      <img src="assets/illustrations/Scene-1.webp" alt="" loading="eager" decoding="async">
     </div>
   </section>
 
@@ -382,8 +385,10 @@
     </div>
   </section>
 
-
-
+  <!-- Scene break -->
+  <div class="scene-break" aria-hidden="true">
+    <img src="assets/illustrations/Scene.webp" alt="" loading="lazy" decoding="async">
+  </div>
 
 
 
@@ -454,34 +459,45 @@
 
   <!-- Contact -->
   <section class="contact" id="contact">
-    <h2 class="section-label" data-reveal><span class="section-number" aria-hidden="true">03 —</span> <span
-        data-i18n="contact-label">[ Get in touch ]</span></h2>
-    <p class="contact__intro" data-reveal data-i18n="contact-intro">Ready to build something that feels as good as it
-      looks? Book a 15-minute intro call to discuss your project.</p>
-    <a href="mailto:yann@durandet.studio" class="contact__cta" data-reveal data-i18n="contact-cta">Let's work together
-      →</a>
-    <p class="contact__status" data-reveal data-i18n="contact-status1">[ Available for brand identity, web design, and
-      creative direction ]</p>
-    <p class="contact__status" data-reveal data-i18n="contact-status2">[ Usually responds within 24 hours ]</p>
-    <div class="contact__socials" data-reveal>
-      <a href="https://instagram.com/durandet.studio" class="contact__social-link" target="_blank"
-        rel="noopener noreferrer" aria-label="Instagram">
-        <img src="assets/icons/instagram_icon.svg" alt="Instagram" width="20" height="20">
-      </a>
-      <a href="https://x.com/YannDurandet" class="contact__social-link" target="_blank" rel="noopener noreferrer"
-        aria-label="X / Twitter">
-        <img src="assets/icons/x_icon.svg" alt="X" width="20" height="20">
-      </a>
-      <a href="https://linkedin.com/in/yanndurandet" class="contact__social-link" target="_blank"
-        rel="noopener noreferrer" aria-label="LinkedIn">
-        <img src="assets/icons/linkedin_icon.svg" alt="LinkedIn" width="20" height="20">
-      </a>
+
+    <div class="contact__body">
+      <h2 class="section-label" data-reveal><span class="section-number" aria-hidden="true">03 —</span> <span
+          data-i18n="contact-label">[ Get in touch ]</span></h2>
+      <p class="contact__intro" data-reveal data-i18n="contact-intro">Ready to build something that feels as good as it
+        looks? Book a 15-minute intro call to discuss your project.</p>
+      <a href="mailto:yann@durandet.studio" class="contact__cta" data-reveal data-i18n="contact-cta">Let's work together
+        →</a>
+      <p class="contact__status" data-reveal data-i18n="contact-status1">[ Available for brand identity, web design, and
+        creative direction ]</p>
+      <p class="contact__status" data-reveal data-i18n="contact-status2">[ Usually responds within 24 hours ]</p>
+      <div class="contact__socials" data-reveal>
+        <a href="https://instagram.com/durandet.studio" class="contact__social-link" target="_blank"
+          rel="noopener noreferrer" aria-label="Instagram">
+          <img src="assets/icons/instagram_icon.svg" alt="Instagram" width="20" height="20">
+        </a>
+        <a href="https://x.com/YannDurandet" class="contact__social-link" target="_blank" rel="noopener noreferrer"
+          aria-label="X / Twitter">
+          <img src="assets/icons/x_icon.svg" alt="X" width="20" height="20">
+        </a>
+        <a href="https://linkedin.com/in/yanndurandet" class="contact__social-link" target="_blank"
+          rel="noopener noreferrer" aria-label="LinkedIn">
+          <img src="assets/icons/linkedin_icon.svg" alt="LinkedIn" width="20" height="20">
+        </a>
+      </div>
+      <p class="contact__availability" data-reveal data-i18n="contact-availability">Now booking for June 2026</p>
     </div>
-    <p class="contact__availability" data-reveal data-i18n="contact-availability">Now booking for June 2026</p>
+
+    <div class="contact__bg" aria-hidden="true">
+      <img src="assets/illustrations/Scene-5.webp" alt="" loading="lazy" decoding="async">
+    </div>
+
   </section>
 
   <!-- Footer -->
   <footer class="footer">
+    <div class="footer__bg" aria-hidden="true">
+      <img src="assets/illustrations/Scene-5.webp" alt="" loading="lazy" decoding="async">
+    </div>
     <div class="footer__inner">
       <div class="footer__top">
 
@@ -491,7 +507,7 @@
         </div>
 
         <div class="footer__col">
-          <p class="footer__col-title">[ Legal ]</p>
+          <p class="footer__col-title" data-i18n="footer-legal">[ Legal ]</p>
           <ul class="footer__links">
             <li><a href="privacy.html">Privacy</a></li>
             <li><a href="terms.html">Terms</a></li>
@@ -499,7 +515,7 @@
         </div>
 
         <div class="footer__col">
-          <p class="footer__col-title">[ Projects ]</p>
+          <p class="footer__col-title" data-i18n="footer-projects">[ Projects ]</p>
           <ul class="footer__links">
             <li><a href="https://yanndurandet.me/racing" target="_blank" rel="noopener noreferrer">Department of Racing
                 Drivers</a></li>
@@ -509,14 +525,13 @@
         </div>
 
         <div class="footer__col">
-          <p class="footer__col-title">[ Socials ]</p>
+          <p class="footer__col-title" data-i18n="footer-socials">[ Socials ]</p>
           <ul class="footer__links">
             <li><a href="https://instagram.com/durandet.studio" target="_blank" rel="noopener noreferrer">Instagram</a>
             </li>
             <li><a href="https://www.linkedin.com/in/yann-durandet-web-designer/" target="_blank"
                 rel="noopener noreferrer">LinkedIn</a></li>
-            <li><a href="https://contra.com/community/profile/yann_durandet_ecjbh640" target="_blank"
-                rel="noopener noreferrer">Contr                rel="noopener noreferrer">Contra</a></li>
+            <li><a href="https://contra.com/y/yanndurandet" target="_blank" rel="noopener noreferrer">Contra</a></li>
             <li><a href="https://www.malt.fr/profile/yanndurandet" target="_blank" rel="noopener noreferrer">Malt</a>
             </li>
             <li><a href="https://x.com/YannDurandet" target="_blank" rel="noopener noreferrer">X</a></li>

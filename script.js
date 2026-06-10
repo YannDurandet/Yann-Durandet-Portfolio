@@ -102,6 +102,9 @@
       'contact-cta': 'Book a 15-min call →',
       'contact-status1': '[ Available for brand identity, web design, and creative direction ]',
       'contact-status2': '[ Usually responds within 24 hours ]',
+      'footer-legal': '[ Legal ]',
+      'footer-projects': '[ Projects ]',
+      'footer-socials': '[ Socials ]',
       'footer-copy': '© 2026 DRNDT Studio — Designed & built with too much caffeine',
       'pullquote-text': '"The goal of a designer is to listen, observe, understand, sympathize, empathize, synthesize, and glean insights that enable him or her to \'make the invisible visible.\'"',
       'pullquote-cite': '— Hillman Curtis',
@@ -135,6 +138,9 @@
       'contact-cta': 'Prendre rendez-vous →',
       'contact-status1': "[ Disponible pour l'identité de marque, le design web et la direction artistique ]",
       'contact-status2': '[ Répond généralement sous 24 heures ]',
+      'footer-legal': '[ Légal ]',
+      'footer-projects': '[ Projets ]',
+      'footer-socials': '[ Réseaux ]',
       'footer-copy': '© 2026 DRNDT Studio — Conçu & construit avec trop de caféine',
       'pullquote-text': '« Le rôle du designer est d\'écouter, d\'observer, de comprendre, de sympathiser, d\'empathiser, de synthétiser, et de dégager des intuitions qui lui permettent de « rendre l\'invisible visible ». »',
       'pullquote-cite': '— Hillman Curtis',
@@ -359,7 +365,7 @@
   /* -----------------------------------------------
      Magnetic hover — nav links & CTA
      ----------------------------------------------- */
-  const magneticEls = document.querySelectorAll('.nav__links a, .nav__links button, .contact__cta');
+  const magneticEls = document.querySelectorAll('.nav__links a, .nav__links button');
   const MAX_PULL = 6;
 
   magneticEls.forEach((el) => {
@@ -438,4 +444,42 @@
       animateCursor();
     }
   });
+
+  // ── Illustration parallax ──────────────────────────
+  (function () {
+    const items = [
+      { selector: '.hero__painting img',   depth: 0.15 },
+      { selector: '.scene-break img',      depth: 0.30 },
+    ]
+      .map(({ selector, depth }) => ({ el: document.querySelector(selector), depth }))
+      .filter(({ el }) => el !== null);
+
+    if (!items.length) return;
+
+    function tick() {
+      const scrollY = window.scrollY;
+      items.forEach(({ el, depth }) => {
+        const rect = el.parentElement.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+        const center = rect.top + rect.height / 2 - window.innerHeight / 2;
+        el.style.transform = `translateY(${center * depth * -1}px)`;
+      });
+    }
+
+    window.addEventListener('scroll', tick, { passive: true });
+    tick();
+  })();
+
+  // ── Contact image — match body height at 3:5 ratio ──
+  (function () {
+    const body = document.querySelector('.contact__body');
+    const bg   = document.querySelector('.contact__bg');
+    if (!body || !bg) return;
+    function syncContactImage() {
+      if (window.innerWidth <= 768) { bg.style.width = ''; return; }
+      bg.style.width = (body.offsetHeight * 3 / 5) + 'px';
+    }
+    syncContactImage();
+    window.addEventListener('resize', syncContactImage);
+  })();
 })();
