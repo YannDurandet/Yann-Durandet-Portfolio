@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vantage Automobiles — Case Study | Yann Durandet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#F0EAD8">
+  <link rel="icon" href="assets/favicon.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="Brand identity design for Vantage Automobiles. Visual identity, logo system, and brand guidelines for an independent automotive client.">
+  <link rel="canonical" href="https://durandet.studio/vantage">
+  <style>
+    :root {
+      --bg: #F0EAD8;
+      --text: #212622;
+      --text-muted: #4E5E4E;
+      --border: #E2DAC8;
+      --accent: #D25530;
+      /* keep all other tokens (font, spacing, etc.) unchanged */
+    }
+
+    [data-theme="dark"] {
+      --bg: #212622;
+      --text: #EDE7D8;
+      --text-muted: #8A9E8A;
+      --border: #334A33;
+    }
+
+    /* ── Case Study Layout ── */
+    .cs {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 var(--page-padding);
+    }
+
+    .cs-hero {
+      padding: calc(var(--space-xl) + 60px) var(--page-padding) var(--space-lg);
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .cs-hero__back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-lg);
+      transition: color 0.2s ease;
+    }
+
+    .cs-hero__back:hover { color: var(--accent); }
+
+    .cs-hero__badge {
+      margin-bottom: var(--space-sm);
+    }
+
+    .cs-hero__title {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(2.5rem, 7vw, 6rem);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .cs-hero__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+
+    .cs-hero__problem {
+      font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+      font-weight: 300;
+      color: var(--text-secondary);
+      max-width: 60ch;
+      line-height: 1.5;
+      border-left: 2px solid var(--accent);
+      padding-left: var(--space-md);
+    }
+
+    /* ── Case study images ── */
+    .cs-img {
+      width: 100%;
+      margin: var(--space-xl) 0;
+      border: 0;
+      padding: 0;
+    }
+
+    .cs-img img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ── Body copy ── */
+    .cs-section {
+      padding: var(--space-xl) 0;
+      border-top: 1px solid var(--bg-secondary);
+    }
+
+    .cs-section__label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: var(--space-lg);
+    }
+
+    .cs-section__title {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 400;
+      color: var(--text-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .cs-body p {
+      color: var(--text-secondary);
+      line-height: 1.75;
+      max-width: 68ch;
+      margin-bottom: var(--space-sm);
+    }
+
+    .cs-body p:last-child { margin-bottom: 0; }
+
+    /* ── Stats row ── */
+    .cs-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-md);
+      padding: var(--space-xl) 0;
+      border-top: 1px solid var(--bg-secondary);
+      border-bottom: 1px solid var(--bg-secondary);
+      margin: var(--space-xl) 0;
+    }
+
+    .cs-stat__number {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .cs-stat__label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+    }
+
+    /* ── Two-col image grid ── */
+    .cs-img-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+      margin: var(--space-xl) 0;
+    }
+
+    /* ── Result callout ── */
+    .cs-result {
+      padding: var(--space-xl) 0;
+      border-top: 1px solid var(--bg-secondary);
+    }
+
+    .cs-result__text {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 400;
+      color: var(--text-primary);
+      max-width: 50ch;
+      line-height: 1.3;
+    }
+
+    /* ── Next project nav ── */
+    .cs-next {
+      padding: var(--space-xl) var(--page-padding);
+      border-top: 1px solid var(--bg-secondary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .cs-next__label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+    }
+
+    .cs-next__link {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(1.25rem, 3vw, 2rem);
+      color: var(--text-primary);
+      transition: color 0.2s ease;
+    }
+
+    .cs-next__link:hover { color: var(--accent); }
+
+    @media (max-width: 768px) {
+      .cs-stats { grid-template-columns: repeat(2, 1fr); }
+      .cs-img-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .cs-stats { grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Preloader -->
+  <div id="preloader" class="preloader" aria-hidden="false">
+    <p class="preloader__tagline">Design is empathy in motion.</p>
+    <img src="assets/icons/logo-white.svg" class="preloader__logo" alt="DRNDT Studio">
+    <div class="preloader__bar-wrap">
+      <div class="preloader__bar-progress"></div>
+    </div>
+  </div>
+
+  <!-- Cursor -->
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
+
+  <!-- Nav -->
+  <nav class="nav" role="navigation">
+    <a href="index.html" class="nav__logo">
+      <img src="assets/icons/logo-black.svg" alt="DRNDT Studio" class="nav__logo-img logo--light">
+      <img src="assets/icons/logo-white.svg" alt="DRNDT Studio" class="nav__logo-img logo--dark">
+    </a>
+    <ul class="nav__links">
+      <li><a href="index.html#work" data-i18n="nav-work">[ Work ]</a></li>
+      <li><a href="index.html#about" data-i18n="nav-about">[ About ]</a></li>
+      <li><a href="index.html#contact" data-i18n="nav-contact">[ Contact ]</a></li>
+      <li><a href="index.html#contact" class="nav__cta" data-i18n="nav-cta">Let's work together</a></li>
+      <li><button class="nav__lang-toggle" id="langToggle" data-hoverable aria-label="Switch language to French">[ FR ]</button></li>
+      <li><button class="nav__theme-toggle" id="themeToggle" data-hoverable aria-label="Switch to dark mode">[ Dark ]</button></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <header class="cs-hero">
+    <a href="index.html#work" class="cs-hero__back" data-i18n="cs-back">← Back to work</a>
+    <p class="badge cs-hero__badge" data-i18n="vantage-sector">[ Sector: Automotive ]</p>
+    <h1 class="cs-hero__title">Vantage Automobiles</h1>
+    <div class="cs-hero__meta">
+      <span class="badge" data-i18n="vantage-badge-deliverable">[ Deliverable: Brand Identity ]</span>
+      <span class="badge" data-i18n="vantage-badge-type">[ Type: Client Work ]</span>
+      <span class="badge" data-i18n="vantage-badge-status">[ Status: Delivered ]</span>
+    </div>
+  </header>
+
+  <!-- Header image -->
+  <div class="cs">
+    <figure class="cs-img" data-reveal>
+      <img
+        src="assets/work/vantage-1920px.webp"
+        srcset="assets/work/vantage-960px.webp 960w, assets/work/vantage-1920px.webp 1920w"
+        sizes="(max-width: 768px) 100vw, var(--max-width)"
+        alt="Vantage Automobiles — Brand identity"
+        width="1920" height="1080"
+        loading="eager" decoding="async">
+    </figure>
+  </div>
+
+  <!-- Stats -->
+  <div class="cs">
+    <div class="cs-stats">
+      <div class="cs-stat" data-reveal>
+        <p class="cs-stat__number" data-i18n="vantage-stat-deliverable">Brand Identity</p>
+        <p class="cs-stat__label" data-i18n="vantage-stat-label-deliverable">Deliverable</p>
+      </div>
+      <div class="cs-stat" data-reveal>
+        <p class="cs-stat__number" data-i18n="vantage-stat-client">Client Work</p>
+        <p class="cs-stat__label" data-i18n="vantage-stat-label-type">Type</p>
+      </div>
+      <div class="cs-stat" data-reveal>
+        <p class="cs-stat__number" data-i18n="vantage-stat-delivered">Delivered</p>
+        <p class="cs-stat__label" data-i18n="vantage-stat-label-status">Status</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section: Context -->
+  <section class="cs">
+    <div class="cs-section" data-reveal>
+      <p class="cs-section__label" data-i18n="vantage-01-label">01 — Context</p>
+      <h2 class="cs-section__title" data-i18n="vantage-01-title">What is Vantage Automobiles?</h2>
+      <div class="cs-body">
+        <p data-i18n="vantage-01-body">Vantage Automobiles is an independent automotive consultancy helping clients source, evaluate, and acquire vehicles with confidence. Operating in a market where trust is the product, they needed a brand identity that would communicate credibility and expertise from the first impression — something that felt established without being stiff.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Challenge -->
+  <section class="cs">
+    <div class="cs-section" data-reveal>
+      <p class="cs-section__label" data-i18n="vantage-02-label">02 — Challenge</p>
+      <h2 class="cs-section__title" data-i18n="vantage-02-title">The brief.</h2>
+      <div class="cs-body">
+        <p data-i18n="vantage-02-body">Vantage came with no visual identity at all. The brief was to build one from scratch: a logo system, a colour palette, and a set of guidelines that would give the business a professional face across every touchpoint. The design challenge was distinguishing a young consultancy in a field where competitors either lean on heritage clichés or underdifferentiated corporate aesthetics.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Process -->
+  <section class="cs">
+    <div class="cs-section" data-reveal>
+      <p class="cs-section__label" data-i18n="vantage-03-label">03 — Process</p>
+      <h2 class="cs-section__title" data-i18n="vantage-03-title">How I approached it.</h2>
+      <div class="cs-body">
+        <p data-i18n="vantage-03-body">I started with a positioning exercise — mapping where Vantage sat between warmth and precision, approachability and authority. From there, moodboards led to logo exploration: several directions were tested before landing on a mark that balanced confidence with restraint. Typography and colour were chosen to reinforce the same qualities — reliable, legible, credible.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Deliverables -->
+  <section class="cs">
+    <div class="cs-section" data-reveal>
+      <p class="cs-section__label" data-i18n="vantage-04-label">04 — Deliverables</p>
+      <h2 class="cs-section__title" data-i18n="vantage-04-title">What I built.</h2>
+      <div class="cs-body">
+        <p data-i18n="vantage-04-body">The full brand package included a primary logo and logomark with usage variations, a complete colour palette and typographic system, a brand guidelines document for consistent application, and a set of mockups showing the identity applied across real-world contexts — stationery, signage, and digital formats.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Outcome -->
+  <section class="cs">
+    <div class="cs-section" data-reveal>
+      <p class="cs-section__label" data-i18n="vantage-05-label">05 — Outcome</p>
+      <h2 class="cs-section__title" data-i18n="vantage-05-title">Result.</h2>
+      <div class="cs-body">
+        <p data-i18n="vantage-05-body">The brand was delivered and well received. It gave Vantage a clear, professional face to take into the market — something that could hold its own against more established players while still feeling specific to who they are.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cs">
+    <div class="cs-result" data-reveal>
+      <p class="cs-result__text" data-i18n="cs-have-project">Have a project in mind?</p>
+      <a href="https://calendar.app.google/PmwnjAqDaKGZMb2t8" target="_blank" rel="noopener" class="contact__cta" style="display: inline-block; margin-top: var(--space-md);" data-i18n="contact-cta">Book a 15-min intro call →</a>
+      <p class="contact__availability" style="margin-top: var(--space-sm);" data-i18n="contact-availability">Now booking for Q3 2026</p>
+    </div>
+  </div>
+
+  <!-- Back nav -->
+  <nav class="cs-next" aria-label="Back to work">
+    <p class="cs-next__label" data-i18n="cs-next-back-label">[ Back ]</p>
+    <a href="index.html#work" class="cs-next__link" data-i18n="cs-next-back-link">← Back to work</a>
+  </nav>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <img src="assets/icons/logo-black.svg" alt="DRNDT Studio" class="footer__logo logo--light">
+          <img src="assets/icons/logo-white.svg" alt="DRNDT Studio" class="footer__logo logo--dark">
+        </div>
+        <div class="footer__col">
+          <p class="footer__col-title" data-i18n="footer-legal">[ Legal ]</p>
+          <ul class="footer__links">
+            <li><a href="privacy.html">Privacy</a></li>
+            <li><a href="terms.html">Terms</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <p class="footer__col-title" data-i18n="footer-projects">[ Projects ]</p>
+          <ul class="footer__links">
+            <li><a href="https://yanndurandet.me/racing" target="_blank" rel="noopener noreferrer">Department of Racing Drivers</a></li>
+            <li><a href="https://yanndurandet.me/8bitseditor/" target="_blank" rel="noopener noreferrer">8 bits image editor</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <p class="footer__col-title" data-i18n="footer-socials">[ Socials ]</p>
+          <ul class="footer__links">
+            <li><a href="https://instagram.com/durandet.studio" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            <li><a href="https://www.linkedin.com/in/yann-durandet-web-designer/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+            <li><a href="https://contra.com/y/yanndurandet" target="_blank" rel="noopener noreferrer">Contra</a></li>
+            <li><a href="https://www.malt.fr/profile/yanndurandet" target="_blank" rel="noopener noreferrer">Malt</a></li>
+            <li><a href="https://x.com/YannDurandet" target="_blank" rel="noopener noreferrer">X</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__tagline" data-i18n="footer-tagline">"Design is empathy in motion."</p>
+        <p class="footer__copy" data-i18n="footer-copy">© 2026 DRNDT Studio — Designed &amp; built with too much caffeine</p>
+        <div class="footer__mobile-toggles">
+          <button class="footer__toggle-btn" id="langToggleMobile" aria-label="Switch language to French">[ FR ]</button>
+          <button class="footer__toggle-btn" id="themeToggleMobile" aria-label="Switch to dark mode">[ Dark ]</button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
