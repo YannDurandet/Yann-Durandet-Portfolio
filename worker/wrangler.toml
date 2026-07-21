@@ -1,0 +1,13 @@
+name       = "durandet-studio-api"
+main       = "src/index.js"
+compatibility_date = "2025-01-01"
+
+# Route: only handle /api/* requests, let everything else pass to GitHub Pages
+[[routes]]
+pattern = "durandet.studio/api/*"
+zone_name = "durandet.studio"
+
+# Secrets (set via `wrangler secret put`, never hardcode here):
+#   TURSO_URL       — from `turso db show durandet-studio --url`
+#   TURSO_AUTH_TOKEN — from `turso db tokens create durandet-studio`
+#   RESEND_API_KEY  — from Resend dashboard

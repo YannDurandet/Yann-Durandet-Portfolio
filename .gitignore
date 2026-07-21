@@ -1,2 +1,8 @@
 .claude/
 .vscode/
+.env
+.env.*
+
+# Worker
+worker/node_modules/
+worker/.wrangler/
