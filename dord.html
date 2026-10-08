@@ -9,8 +9,41 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
   <meta name="theme-color" content="#F0EAD8">
+  <meta name="color-scheme" content="light dark">
   <link rel="icon" href="assets/favicon.jpg" type="image/jpeg">
   <link rel="stylesheet" href="style.css">
+  <script>
+    /* Runs before first paint: restore a pinned colour scheme, and skip the splash when arriving from another page of this site */
+    (() => {
+      const root = document.documentElement;
+      try {
+        const stored = localStorage.getItem('theme');
+        const pinned = stored === 'light' || stored === 'dark' ? stored : null;
+        if (pinned) root.dataset.theme = pinned;
+        const dark = (pinned || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')) === 'dark';
+        document.querySelector('meta[name="theme-color"]').content = dark ? '#212622' : '#F0EAD8';
+      } catch {}
+      // Only where script.js is render-blocking: otherwise the splash is what hides the pre-translation flash
+      const entry = performance.getEntriesByType('navigation')[0];
+      if ('blocking' in HTMLScriptElement.prototype && document.referrer.startsWith(location.origin + '/') && entry?.type !== 'reload') root.classList.add('no-preloader');
+    })();
+  </script>
+  <link rel="expect" href="#case-hero" blocking="render">
+  <script type="speculationrules">
+  {
+    "prefetch": [{
+      "where": {
+        "and": [
+          { "href_matches": "/*" },
+          { "not": { "href_matches": "/api/*" } },
+          { "not": { "selector_matches": "[target=_blank]" } }
+        ]
+      },
+      "eagerness": "moderate"
+    }]
+  }
+  </script>
+  <script src="script.js" defer blocking="render"></script>
   <meta name="description" content="Branding and web design for the Department of Racing Drivers (DORD) — an active motorsport passion project covering international racing.">
   <link rel="canonical" href="https://durandet.studio/dord">
 
@@ -47,218 +80,6 @@
     ]
   }
   </script>
-  <style>
-    :root {
-      --bg: #F0EAD8;
-      --text: #212622;
-      --text-muted: #4E5E4E;
-      --border: #E2DAC8;
-      --accent: #D25530;
-      /* keep all other tokens (font, spacing, etc.) unchanged */
-    }
-
-    [data-theme="dark"] {
-      --bg: #212622;
-      --text: #EDE7D8;
-      --text-muted: #8A9E8A;
-      --border: #334A33;
-    }
-
-    /* ── Case Study Layout ── */
-    .cs {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 0 var(--page-padding);
-    }
-
-    .cs-hero {
-      padding: calc(var(--space-xl) + 60px) var(--page-padding) var(--space-lg);
-      max-width: var(--max-width);
-      margin: 0 auto;
-    }
-
-    .cs-hero__back {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      letter-spacing: 0.08em;
-      color: var(--text-secondary);
-      margin-bottom: var(--space-lg);
-      transition: color 0.2s ease;
-    }
-
-    .cs-hero__back:hover { color: var(--accent); }
-
-    .cs-hero__badge {
-      margin-bottom: var(--space-sm);
-    }
-
-    .cs-hero__title {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: clamp(2.5rem, 7vw, 6rem);
-      font-weight: 400;
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      color: var(--text-primary);
-      margin-bottom: var(--space-md);
-    }
-
-    .cs-hero__meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-sm);
-      margin-bottom: var(--space-lg);
-    }
-
-    .cs-hero__problem {
-      font-size: clamp(1.125rem, 2.5vw, 1.5rem);
-      font-weight: 300;
-      color: var(--text-secondary);
-      max-width: 60ch;
-      line-height: 1.5;
-      border-left: 2px solid var(--accent);
-      padding-left: var(--space-md);
-    }
-
-    /* ── Case study images ── */
-    .cs-img {
-      width: 100%;
-      margin: var(--space-xl) 0;
-      border: 0;
-      padding: 0;
-    }
-
-    .cs-img img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    /* ── Body copy ── */
-    .cs-section {
-      padding: var(--space-xl) 0;
-      border-top: 1px solid var(--bg-secondary);
-    }
-
-    .cs-section__label {
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--accent);
-      margin-bottom: var(--space-lg);
-    }
-
-    .cs-section__title {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: clamp(1.5rem, 3vw, 2.5rem);
-      font-weight: 400;
-      color: var(--text-primary);
-      margin-bottom: var(--space-md);
-    }
-
-    .cs-body p {
-      color: var(--text-secondary);
-      line-height: 1.75;
-      max-width: 68ch;
-      margin-bottom: var(--space-sm);
-    }
-
-    .cs-body p:last-child { margin-bottom: 0; }
-
-    /* ── Stats row ── */
-    .cs-stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--space-md);
-      padding: var(--space-xl) 0;
-      border-top: 1px solid var(--bg-secondary);
-      border-bottom: 1px solid var(--bg-secondary);
-      margin: var(--space-xl) 0;
-    }
-
-    .cs-stat__number {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: clamp(2rem, 4vw, 3.5rem);
-      font-weight: 400;
-      color: var(--text-primary);
-      line-height: 1;
-      margin-bottom: 0.25rem;
-    }
-
-    .cs-stat__label {
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      letter-spacing: 0.08em;
-      color: var(--text-secondary);
-    }
-
-    /* ── Two-col image grid ── */
-    .cs-img-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-md);
-      margin: var(--space-xl) 0;
-    }
-
-    /* ── Result callout ── */
-    .cs-result {
-      padding: var(--space-xl) 0;
-      border-top: 1px solid var(--bg-secondary);
-    }
-
-    .cs-result__text {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: clamp(1.5rem, 3vw, 2.5rem);
-      font-weight: 400;
-      color: var(--text-primary);
-      max-width: 50ch;
-      line-height: 1.3;
-    }
-
-    /* ── Next project nav ── */
-    .cs-next {
-      padding: var(--space-xl) var(--page-padding);
-      border-top: 1px solid var(--bg-secondary);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: var(--max-width);
-      margin: 0 auto;
-    }
-
-    .cs-next__label {
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      letter-spacing: 0.08em;
-      color: var(--text-secondary);
-    }
-
-    .cs-next__link {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: clamp(1.25rem, 3vw, 2rem);
-      color: var(--text-primary);
-      transition: color 0.2s ease;
-    }
-
-    .cs-next__link:hover { color: var(--accent); }
-
-    @media (max-width: 768px) {
-      .cs-stats { grid-template-columns: repeat(2, 1fr); }
-      .cs-img-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 480px) {
-      .cs-stats { grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
-    }
-  </style>
 </head>
 
 <body>
@@ -277,12 +98,13 @@
   <div class="cursor-ring" aria-hidden="true"></div>
 
   <!-- Nav -->
-  <nav class="nav" role="navigation">
+  <nav class="nav" aria-label="Primary">
     <a href="index.html" class="nav__logo">
       <img src="assets/icons/logo-black.svg" alt="DRNDT Studio" class="nav__logo-img logo--light">
       <img src="assets/icons/logo-white.svg" alt="DRNDT Studio" class="nav__logo-img logo--dark">
     </a>
-    <ul class="nav__links">
+    <button type="button" class="nav__menu-btn" popovertarget="navLinks" data-i18n="nav-menu">[ Menu ]</button>
+    <ul class="nav__links" id="navLinks" popover>
       <li><a href="index.html#work">[ Work ]</a></li>
       <li><a href="index.html#about">[ About ]</a></li>
       <li><a href="index.html#contact">[ Contact ]</a></li>
@@ -306,14 +128,14 @@
 
   <!-- Header image -->
   <div class="cs">
-    <figure class="cs-img" data-reveal>
+    <figure class="cs-img" id="case-hero">
       <img
         src="assets/work/dord-branding-1920px.webp"
         srcset="assets/work/dord-branding-960px.webp 960w, assets/work/dord-branding-1920px.webp 1920w"
-        sizes="(max-width: 768px) 100vw, var(--max-width)"
+        sizes="(max-width: 768px) 100vw, 1100px"
         alt="Department of Racing Drivers — Branding and website"
         width="1920" height="1080"
-        loading="eager" decoding="async">
+        fetchpriority="high" decoding="async">
     </figure>
   </div>
 
@@ -456,7 +278,6 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
 </body>
 
 </html>

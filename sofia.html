@@ -9,8 +9,41 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
   <meta name="theme-color" content="#F0EAD8">
+  <meta name="color-scheme" content="light dark">
   <link rel="icon" href="assets/favicon.jpg" type="image/jpeg">
   <link rel="stylesheet" href="style.css">
+  <script>
+    /* Runs before first paint: restore a pinned colour scheme, and skip the splash when arriving from another page of this site */
+    (() => {
+      const root = document.documentElement;
+      try {
+        const stored = localStorage.getItem('theme');
+        const pinned = stored === 'light' || stored === 'dark' ? stored : null;
+        if (pinned) root.dataset.theme = pinned;
+        const dark = (pinned || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')) === 'dark';
+        document.querySelector('meta[name="theme-color"]').content = dark ? '#212622' : '#F0EAD8';
+      } catch {}
+      // Only where script.js is render-blocking: otherwise the splash is what hides the pre-translation flash
+      const entry = performance.getEntriesByType('navigation')[0];
+      if ('blocking' in HTMLScriptElement.prototype && document.referrer.startsWith(location.origin + '/') && entry?.type !== 'reload') root.classList.add('no-preloader');
+    })();
+  </script>
+  <link rel="expect" href="#case-hero" blocking="render">
+  <script type="speculationrules">
+  {
+    "prefetch": [{
+      "where": {
+        "and": [
+          { "href_matches": "/*" },
+          { "not": { "href_matches": "/api/*" } },
+          { "not": { "selector_matches": "[target=_blank]" } }
+        ]
+      },
+      "eagerness": "moderate"
+    }]
+  }
+  </script>
+  <script src="script.js" defer blocking="render"></script>
   <meta name="description" content="Sofia by SGS — Enterprise UX redesign. A 2-year overhaul of SGS's global oil condition monitoring platform, used by 97,000 people across 40+ countries.">
   <link rel="canonical" href="https://durandet.studio/sofia">
 
@@ -65,12 +98,13 @@
   <div class="cursor-ring" aria-hidden="true"></div>
 
   <!-- Nav -->
-  <nav class="nav" role="navigation">
+  <nav class="nav" aria-label="Primary">
     <a href="index.html" class="nav__logo">
       <img src="assets/icons/logo-black.svg" alt="DRNDT Studio" class="nav__logo-img logo--light">
       <img src="assets/icons/logo-white.svg" alt="DRNDT Studio" class="nav__logo-img logo--dark">
     </a>
-    <ul class="nav__links">
+    <button type="button" class="nav__menu-btn" popovertarget="navLinks" data-i18n="nav-menu">[ Menu ]</button>
+    <ul class="nav__links" id="navLinks" popover>
       <li><a href="index.html#work" data-i18n="nav-work">[ Work ]</a></li>
       <li><a href="index.html#about" data-i18n="nav-about">[ About ]</a></li>
       <li><a href="index.html#contact" data-i18n="nav-contact">[ Contact ]</a></li>
@@ -96,14 +130,14 @@
 
   <!-- Hero image placeholder -->
   <div class="cs">
-    <figure class="cs-img" data-reveal>
+    <figure class="cs-img" id="case-hero">
       <img
         src="assets/work/sofia-page/header.webp"
         srcset="assets/work/sofia-page/header-mini.webp 960w, assets/work/sofia-page/header.webp 1920w"
-        sizes="(max-width: 768px) 100vw, var(--max-width)"
+        sizes="(max-width: 768px) 100vw, 1100px"
         alt="Sofia platform — dashboard overview"
         width="1920" height="1080"
-        loading="eager" decoding="async">
+        fetchpriority="high" decoding="async">
     </figure>
   </div>
 
@@ -198,7 +232,7 @@
       <img
         src="assets/work/sofia-page/iconset.webp"
         srcset="assets/work/sofia-page/iconset-mini.webp 960w, assets/work/sofia-page/iconset.webp 1920w"
-        sizes="(max-width: 768px) 100vw, var(--max-width)"
+        sizes="(max-width: 768px) 100vw, 1100px"
         alt="Sofia — component library and icon set overview"
         width="1920" height="1080"
         loading="lazy" decoding="async">
@@ -226,7 +260,7 @@
       <img
         src="assets/work/sofia-page/mockup-mobile.webp"
         srcset="assets/work/sofia-page/mockup-mobile-mini.webp 960w, assets/work/sofia-page/mockup-mobile.webp 1920w"
-        sizes="(max-width: 768px) 100vw, var(--max-width)"
+        sizes="(max-width: 768px) 100vw, 1100px"
         alt="Sofia — mobile app view"
         width="1920" height="1080"
         loading="lazy" decoding="async">
@@ -271,7 +305,14 @@
   <!-- Footer (same as index.html) -->
   <footer class="footer">
         <div class="footer__bg" aria-hidden="true">
-      <img src="assets/illustrations/Scene-5.webp" alt="" loading="lazy" decoding="async">
+      <img
+        src="assets/illustrations/Scene-5.webp"
+        srcset="assets/illustrations/Scene-5-1600.webp 1600w,
+                assets/illustrations/Scene-5-2560.webp 2560w,
+                assets/illustrations/Scene-5-3200.webp 3200w,
+                assets/illustrations/Scene-5.webp 4096w"
+        sizes="100vw"
+        alt="" loading="lazy" decoding="async">
     </div>
     <div class="footer__inner">
       <div class="footer__top">
@@ -315,7 +356,6 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
 </body>
 
 </html>

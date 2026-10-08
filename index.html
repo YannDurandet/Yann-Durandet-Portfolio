@@ -11,8 +11,40 @@
     href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@1&display=swap"
     rel="stylesheet">
   <meta name="theme-color" content="#F0EAD8">
+  <meta name="color-scheme" content="light dark">
   <link rel="icon" href="assets/favicon.jpg" type="image/jpeg">
   <link rel="stylesheet" href="style.css">
+  <script>
+    /* Runs before first paint: restore a pinned colour scheme, and skip the splash when arriving from another page of this site */
+    (() => {
+      const root = document.documentElement;
+      try {
+        const stored = localStorage.getItem('theme');
+        const pinned = stored === 'light' || stored === 'dark' ? stored : null;
+        if (pinned) root.dataset.theme = pinned;
+        const dark = (pinned || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')) === 'dark';
+        document.querySelector('meta[name="theme-color"]').content = dark ? '#212622' : '#F0EAD8';
+      } catch {}
+      // Only where script.js is render-blocking: otherwise the splash is what hides the pre-translation flash
+      const entry = performance.getEntriesByType('navigation')[0];
+      if ('blocking' in HTMLScriptElement.prototype && document.referrer.startsWith(location.origin + '/') && entry?.type !== 'reload') root.classList.add('no-preloader');
+    })();
+  </script>
+  <script type="speculationrules">
+  {
+    "prefetch": [{
+      "where": {
+        "and": [
+          { "href_matches": "/*" },
+          { "not": { "href_matches": "/api/*" } },
+          { "not": { "selector_matches": "[target=_blank]" } }
+        ]
+      },
+      "eagerness": "moderate"
+    }]
+  }
+  </script>
+  <script src="script.js" defer blocking="render"></script>
   <meta name="description" content="Yann Durandet is a Web & Brand Designer based in Normandy. Precision, empathy, and an obsessive attention to detail. Available for branding and web design projects worldwide.">
   <meta name="author" content="Yann Durandet">
 
@@ -70,12 +102,13 @@
   <div class="cursor-ring" aria-hidden="true"></div>
 
   <!-- Nav -->
-  <nav class="nav" role="navigation">
+  <nav class="nav" aria-label="Primary">
     <a href="#" class="nav__logo">
       <img src="assets/icons/logo-black.svg" alt="DRNDT Studio" class="nav__logo-img logo--light">
       <img src="assets/icons/logo-white.svg" alt="DRNDT Studio" class="nav__logo-img logo--dark">
     </a>
-    <ul class="nav__links">
+    <button type="button" class="nav__menu-btn" popovertarget="navLinks" data-i18n="nav-menu">[ Menu ]</button>
+    <ul class="nav__links" id="navLinks" popover>
       <li><a href="#work" data-i18n="nav-work">[ Work ]</a></li>
       <li><a href="#about" data-i18n="nav-about">[ About ]</a></li>
       <li><a href="#contact" data-i18n="nav-contact">[ Contact ]</a></li>
@@ -88,17 +121,17 @@
   </nav>
 
   <!-- Altimeter -->
-  <div class="altimeter" aria-label="Scroll altitude indicator">
+  <div class="altimeter" role="group" aria-label="Scroll altitude indicator">
     <div class="alt-left">
       <span class="altimeter__label label-mono">Alt</span>
       <div class="alt-inline">
         <span class="altimeter__value">0</span>
-        <span class="altimeter__unit" data-hoverable role="button" tabindex="0" aria-label="Toggle altitude unit">m</span>
+        <button type="button" class="altimeter__unit" data-hoverable aria-label="Toggle altitude unit">m</button>
       </div>
     </div>
-    <div class="altimeter__bar" role="button" tabindex="0" aria-label="Toggle altitude unit">
-      <div class="altimeter__bar-fill"></div>
-    </div>
+    <button type="button" class="altimeter__bar" aria-label="Toggle altitude unit">
+      <span class="altimeter__bar-fill"></span>
+    </button>
   </div>
 
   <!-- Hero -->
@@ -114,7 +147,16 @@
       <span></span>
     </div>
     <div class="hero__painting" aria-hidden="true">
-      <img src="assets/illustrations/Scene-1.webp" alt="" loading="eager" decoding="async">
+      <!-- Hidden under 901px: those viewports get a 1px placeholder instead of the painting -->
+      <picture>
+        <source media="(min-width: 901px)"
+                srcset="assets/illustrations/Scene-1-1600.webp 1600w,
+                        assets/illustrations/Scene-1-2560.webp 2560w,
+                        assets/illustrations/Scene-1-3200.webp 3200w,
+                        assets/illustrations/Scene-1.webp 4096w"
+                sizes="max(52vw, 154dvh)">
+        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" fetchpriority="high" decoding="async">
+      </picture>
     </div>
   </section>
 
@@ -176,9 +218,9 @@
       <a href="dord.html" class="work__grid-item work__grid-item--wide" data-reveal>
         <div class="work__grid-img-wrap">
           <img
-            src="assets/work/dord-branding-1920px.webp"
-            srcset="assets/work/dord-branding-960px.webp 960w,
-                    assets/work/dord-branding-1920px.webp 1920w"
+            src="assets/work/dord-card-1920px.webp"
+            srcset="assets/work/dord-card-960px.webp 960w,
+                    assets/work/dord-card-1920px.webp 1920w"
             sizes="100vw"
             alt="Department of Racing Drivers — Branding and website"
             loading="lazy"
@@ -188,6 +230,24 @@
         <div class="work__grid-meta">
           <span class="work__grid-name">Department of Racing Drivers</span>
           <span class="badge">[ Active — Branding &amp; Web ]</span>
+        </div>
+      </a>
+
+      <a href="pinpire.html" class="work__grid-item work__grid-item--wide" data-reveal>
+        <div class="work__grid-img-wrap">
+          <img
+            src="assets/work/pinpire-1920px.webp"
+            srcset="assets/work/pinpire-960px.webp 960w,
+                    assets/work/pinpire-1920px.webp 1920w"
+            sizes="100vw"
+            alt="Pinpire — Historical map quiz"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+        <div class="work__grid-meta">
+          <span class="work__grid-name">Pinpire</span>
+          <span class="badge">[ Active — Web Game ]</span>
         </div>
       </a>
 
@@ -400,7 +460,14 @@
 
   <!-- Scene break -->
   <div class="scene-break" aria-hidden="true">
-    <img src="assets/illustrations/Scene.webp" alt="" loading="lazy" decoding="async">
+    <img
+      src="assets/illustrations/Scene.webp"
+      srcset="assets/illustrations/Scene-1600.webp 1600w,
+              assets/illustrations/Scene-2560.webp 2560w,
+              assets/illustrations/Scene-3200.webp 3200w,
+              assets/illustrations/Scene.webp 4096w"
+      sizes="100vw"
+      alt="" loading="lazy" decoding="async">
   </div>
 
 
@@ -497,7 +564,14 @@
     </div>
 
     <div class="contact__bg" aria-hidden="true">
-      <img src="assets/illustrations/Scene-5.webp" alt="" loading="lazy" decoding="async">
+      <img
+        src="assets/illustrations/Scene-5.webp"
+        srcset="assets/illustrations/Scene-5-1600.webp 1600w,
+                assets/illustrations/Scene-5-2560.webp 2560w,
+                assets/illustrations/Scene-5-3200.webp 3200w,
+                assets/illustrations/Scene-5.webp 4096w"
+        sizes="100vw"
+        alt="" loading="lazy" decoding="async">
     </div>
 
   </section>
@@ -505,7 +579,14 @@
   <!-- Footer -->
   <footer class="footer">
     <div class="footer__bg" aria-hidden="true">
-      <img src="assets/illustrations/Scene-5.webp" alt="" loading="lazy" decoding="async">
+      <img
+        src="assets/illustrations/Scene-5.webp"
+        srcset="assets/illustrations/Scene-5-1600.webp 1600w,
+                assets/illustrations/Scene-5-2560.webp 2560w,
+                assets/illustrations/Scene-5-3200.webp 3200w,
+                assets/illustrations/Scene-5.webp 4096w"
+        sizes="100vw"
+        alt="" loading="lazy" decoding="async">
     </div>
     <div class="footer__inner">
       <div class="footer__top">
@@ -559,7 +640,6 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
 </body>
 
 </html>

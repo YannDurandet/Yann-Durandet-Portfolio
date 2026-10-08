@@ -2,8 +2,12 @@
    Tokens
    ------------------------------------------------ */
 :root {
+  /* Follow the OS scheme by default; a pinned choice sets data-theme on <html> (see below) */
+  color-scheme: light dark;
+
   /* Primitives */
   --green-900: #212622;
+  --green-800: #2E3C2E;
   --green-700: #334A33;
   --green-600: #4E5E4E;
   --cream-100: #F0EAD8;
@@ -12,12 +16,17 @@
   --ivory:     #EDE7D8;
   --copper:    #D25530;
 
-  /* Semantic aliases */
-  --bg-primary:    #F0EAD8;
-  --bg-secondary:  var(--cream-200);
-  --text-primary:  var(--green-900);
-  --text-secondary: var(--green-600);
+  /* Semantic aliases — light-dark() resolves from the element's color-scheme */
+  --bg-primary:    light-dark(var(--cream-100), var(--green-900));
+  --bg-secondary:  light-dark(var(--cream-200), var(--green-800));
+  --text-primary:  light-dark(var(--green-900), var(--ivory));
+  --text-secondary: light-dark(var(--green-600), var(--sage-400));
   --accent:        var(--copper);
+
+  /* Values that can't be expressed with light-dark() (images, filters) */
+  --logo-light-display: block;
+  --logo-dark-display:  none;
+  --icon-invert:        0;
 
   --font-geist: 'Geist', system-ui, sans-serif;
   --font-mono:  'Cascadia Mono', 'Courier New', monospace;
@@ -31,6 +40,24 @@
   --space-2xl: 12rem;
   --page-padding: clamp(1.25rem, 5vw, 6rem);
   --max-width: 1100px;
+}
+
+/* Theme: the toggle pins a scheme on <html>; with no pin the OS decides */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"]  { color-scheme: dark; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --logo-light-display: none;
+    --logo-dark-display:  block;
+    --icon-invert:        1;
+  }
+}
+
+:root[data-theme="dark"] {
+  --logo-light-display: none;
+  --logo-dark-display:  block;
+  --icon-invert:        1;
 }
 
 /* ------------------------------------------------
@@ -53,6 +80,12 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Native smooth anchor scrolling (the wheel-smoothing engine in script.js scrolls with behavior: 'instant') */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
 
 body {
   font-family: var(--font-geist);
@@ -60,7 +93,6 @@ body {
   line-height: 1.7;
   color: var(--text-primary);
   background: var(--bg-primary);
-  cursor: none;
   overflow-x: hidden;
 }
 
@@ -108,6 +140,11 @@ img {
   opacity: 0;
   filter: blur(8px);
   pointer-events: none;
+}
+
+/* Set by the inline <head> script when arriving from another page of this site */
+.no-preloader .preloader {
+  display: none;
 }
 
 .preloader__tagline {
@@ -184,6 +221,23 @@ img {
 /* ------------------------------------------------
    Custom Cursor — dot + ring
    ------------------------------------------------ */
+/* Custom cursor is for fine pointers only; touch and coarse pointers keep the native one */
+.cursor-dot,
+.cursor-ring {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: none;
+  }
+
+  .cursor-dot,
+  .cursor-ring {
+    display: block;
+  }
+}
+
 .cursor-dot {
   position: fixed;
   top: 0;
@@ -242,7 +296,7 @@ img {
 }
 
 .nav.is-scrolled {
-  background: rgba(242, 239, 229, 0.8);
+  background: light-dark(rgb(242 239 229 / 0.8), rgb(33 38 34 / 0.95));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -264,6 +318,21 @@ img {
   display: flex;
   gap: var(--space-md);
   list-style: none;
+  /* The list is a [popover] (menu on phones); undo the UA popover box so it stays inline elsewhere */
+  position: static;
+  inset: auto;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: visible;
+  background: none;
+  color: inherit;
+}
+
+.nav__menu-btn {
+  display: none;
 }
 
 .nav__links a {
@@ -294,15 +363,44 @@ img {
 /* ------------------------------------------------
    [data-reveal] system
    ------------------------------------------------ */
+/* Fallback (no scroll-driven animations): script.js adds .is-revealed via IntersectionObserver */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  translate: 0 20px;
+  transition: opacity 0.6s ease, translate 0.6s ease;
 }
 
 [data-reveal].is-revealed {
   opacity: 1;
-  transform: translateY(0);
+  translate: 0 0;
+}
+
+/* Native: reveal progress follows the element's own entry into the viewport */
+@supports ((animation-timeline: view()) and (animation-range: entry)) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        translate: 0 20px;
+      }
+    }
+
+    [data-reveal] {
+      opacity: 1;
+      translate: none;
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 120px;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    translate: none;
+    transition: none;
+  }
 }
 
 /* ------------------------------------------------
@@ -329,7 +427,7 @@ img {
    ------------------------------------------------ */
 .hero {
   position: relative;
-  overflow: hidden;
+  overflow: clip; /* not hidden: that would make .hero the scroller for the parallax view-timeline */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -451,6 +549,12 @@ img {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .hero__chevron {
+    animation: none;
+  }
+}
+
 /* Hero painting — right-side full-height panel, fades left */
 .hero__painting {
   position: absolute;
@@ -460,8 +564,7 @@ img {
   width: 52%;
   pointer-events: none;
   z-index: 0;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 35%);
-          mask-image: linear-gradient(to right, transparent 0%, black 35%);
+  mask-image: linear-gradient(to right, transparent 0%, black 35%);
 }
 
 .hero__painting img {
@@ -473,7 +576,7 @@ img {
   object-fit: cover;
   object-position: center;
   display: block;
-  will-change: transform;
+  will-change: translate;
 }
 
 @media (max-width: 900px) {
@@ -502,7 +605,37 @@ img {
   object-fit: cover;
   object-position: center;
   display: block;
-  will-change: transform;
+  will-change: translate;
+}
+
+/* Parallax: the image drifts by ±(depth × reach) across the wrapper's pass through the viewport.
+   reach = (viewport height + wrapper height) / 2. Browsers without scroll-driven animations
+   get the same motion from the scroll fallback in script.js. */
+@supports ((animation-timeline: view()) and (animation-range: entry)) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes parallax-shift {
+      from { translate: 0 calc(var(--parallax-depth) * var(--parallax-reach) * -1); }
+      to   { translate: 0 calc(var(--parallax-depth) * var(--parallax-reach)); }
+    }
+
+    .hero__painting {
+      --parallax-depth: 0.15;
+      --parallax-reach: 100dvh; /* (100dvh + 100dvh) / 2 */
+      view-timeline: --parallax block;
+    }
+
+    .scene-break {
+      --parallax-depth: 0.3;
+      --parallax-reach: 71vh; /* (100vh + 42vh) / 2 */
+      view-timeline: --parallax block;
+    }
+
+    .hero__painting img,
+    .scene-break img {
+      animation: parallax-shift linear both;
+      animation-timeline: --parallax;
+    }
+  }
 }
 
 
@@ -783,6 +916,13 @@ div.work__grid-item:hover .work__grid-img-wrap img {
 }
 
 .altimeter__unit {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
   cursor: pointer;
   transition: color 0.3s ease;
   text-transform: uppercase;
@@ -793,6 +933,10 @@ div.work__grid-item:hover .work__grid-img-wrap img {
 }
 
 .altimeter__bar {
+  appearance: none;
+  display: block;
+  border: 0;
+  padding: 0;
   width: 2px;
   height: 48px;
   background: var(--bg-secondary);
@@ -802,13 +946,27 @@ div.work__grid-item:hover .work__grid-img-wrap img {
   cursor: pointer;
 }
 
+/* Fill is a compositor-friendly scaleY. script.js sets --alt-progress where the native timeline below isn't available. */
 .altimeter__bar-fill {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  inset: 0;
   background: var(--accent);
-  transition: height 0.1s linear;
+  transform-origin: bottom;
+  transform: scaleY(var(--alt-progress, 0));
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes altimeter-fill {
+      from { transform: scaleY(0); }
+      to   { transform: scaleY(1); }
+    }
+
+    .altimeter__bar-fill {
+      animation: altimeter-fill linear both;
+      animation-timeline: scroll(root);
+    }
+  }
 }
 
 /* ------------------------------------------------
@@ -917,8 +1075,8 @@ div.work__grid-item:hover .work__grid-img-wrap img {
 }
 
 /* Dark mode: icons need to be inverted on dark-green background */
-[data-theme="dark"] .contact__body .contact__social-link img {
-  filter: invert(1);
+.contact__body .contact__social-link img {
+  filter: invert(var(--icon-invert));
 }
 
 .contact__bg {
@@ -1007,17 +1165,13 @@ div.work__grid-item:hover .work__grid-img-wrap img {
   opacity: 0.9;
 }
 
-/* Logo light/dark swap */
+/* Logo light/dark swap (display values come from the theme tokens in :root) */
+.logo--light {
+  display: var(--logo-light-display);
+}
+
 .logo--dark {
-  display: none;
-}
-
-[data-theme="dark"] .logo--light {
-  display: none;
-}
-
-[data-theme="dark"] .logo--dark {
-  display: block;
+  display: var(--logo-dark-display);
 }
 
 .footer__col-title {
@@ -1083,21 +1237,6 @@ div.work__grid-item:hover .work__grid-img-wrap img {
   .footer__top {
     grid-template-columns: 1fr;
   }
-}
-
-/* ------------------------------------------------
-   Dark mode
-   ------------------------------------------------ */
-[data-theme="dark"] {
-  --bg-primary:    var(--green-900);
-  --bg-secondary:  #2E3C2E;
-  --text-primary:  var(--ivory);
-  --text-secondary: var(--sage-400);
-  --accent:        var(--copper);
-}
-
-[data-theme="dark"] .nav.is-scrolled {
-  background: rgba(33, 38, 34, 0.95);
 }
 
 /* ------------------------------------------------
@@ -1440,6 +1579,198 @@ div.work__grid-item:hover .work__grid-img-wrap img {
 
 @media (max-width: 480px) {
   .cs-stats { grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+}
+
+/* ------------------------------------------------
+   Image lightbox — native <dialog>, built by script.js on case-study pages
+   ------------------------------------------------ */
+.cs-img__zoom {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: inherit;
+}
+
+.lightbox {
+  width: fit-content;
+  max-width: 96vw;
+  max-height: 96dvh;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+  cursor: zoom-out;
+
+  /* Exit state; the [open] rule below is the entry target */
+  opacity: 0;
+  transition: opacity 0.3s ease, overlay 0.3s allow-discrete, display 0.3s allow-discrete;
+}
+
+.lightbox[open] {
+  opacity: 1;
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+.lightbox::backdrop {
+  background: rgb(33 38 34 / 0);
+  cursor: zoom-out;
+  transition: background-color 0.3s ease, overlay 0.3s allow-discrete, display 0.3s allow-discrete;
+}
+
+.lightbox[open]::backdrop {
+  background: rgb(33 38 34 / 0.94);
+
+  @starting-style {
+    background: rgb(33 38 34 / 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .lightbox {
+    scale: 0.97;
+    transition: opacity 0.3s ease, scale 0.3s ease, overlay 0.3s allow-discrete, display 0.3s allow-discrete;
+  }
+
+  .lightbox[open] {
+    scale: 1;
+
+    @starting-style {
+      opacity: 0;
+      scale: 0.97;
+    }
+  }
+}
+
+.lightbox__img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 96vw;
+  max-height: 88dvh;
+  object-fit: contain;
+}
+
+.lightbox__close {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  padding: 0.4em 0.75em;
+  border: 0;
+  background: var(--cream-100);
+  color: var(--green-900);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+/* Keep the page from scrolling behind an open modal */
+body:has(.lightbox[open]) {
+  overflow: hidden;
+}
+
+/* ------------------------------------------------
+   View transitions — cross-document, same-origin
+   ------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+::view-transition-group(root) {
+  animation-duration: 0.35s;
+}
+
+/* Work card <-> case-study header (names assigned by the pageswap/pagereveal handlers in script.js) */
+::view-transition-group(case-hero) {
+  animation-duration: 0.55s;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+::view-transition-old(case-hero),
+::view-transition-new(case-hero) {
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ------------------------------------------------
+   Phone navigation — the link list becomes a native popover menu.
+   Only where popovers exist; elsewhere the inline list is kept.
+   ------------------------------------------------ */
+@supports selector(:popover-open) {
+  @media (max-width: 640px) {
+    .nav__menu-btn {
+      display: block;
+      min-height: 2.75rem;
+      padding: 0 0.25rem;
+      border: 0;
+      background: none;
+      font: inherit;
+      letter-spacing: inherit;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .nav .nav__links {
+      position: fixed;
+      inset: 4.5rem var(--page-padding) auto auto;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: var(--space-xs) var(--space-md) var(--space-sm);
+      border: 1px solid var(--bg-secondary);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      opacity: 0;
+      translate: 0 -0.5rem;
+      transition: opacity 0.25s ease, translate 0.25s ease, overlay 0.25s allow-discrete, display 0.25s allow-discrete;
+    }
+
+    .nav .nav__links:not(:popover-open) {
+      display: none;
+    }
+
+    .nav .nav__links:popover-open {
+      opacity: 1;
+      translate: 0 0;
+
+      @starting-style {
+        opacity: 0;
+        translate: 0 -0.5rem;
+      }
+    }
+
+    .nav__links a:not(.nav__cta) {
+      display: block;
+      padding: 0.6rem 0;
+    }
+
+    .nav__links .nav__cta {
+      display: block;
+      margin-top: var(--space-xs);
+      padding: 0.7em 1em;
+      text-align: center;
+    }
+
+    /* Language and theme toggles live in the footer on phones */
+    .nav__links li:has(> .nav__lang-toggle, > .nav__theme-toggle) {
+      display: none;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav__links {
+    transition: none;
+  }
 }
 
 /* ------------------------------------------------

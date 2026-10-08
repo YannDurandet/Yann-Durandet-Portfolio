@@ -9,15 +9,24 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
   <meta name="theme-color" content="#F0EAD8">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    /* Runs before first paint: restore a pinned colour scheme */
+    try {
+      const pinned = localStorage.getItem('theme');
+      if (pinned === 'light' || pinned === 'dark') document.documentElement.dataset.theme = pinned;
+    } catch {}
+  </script>
   <link rel="icon" href="assets/favicon.jpg" type="image/jpeg">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #F0EAD8;
-      --text: #212622;
-      --text-muted: #4E5E4E;
-      --border: #E2DAC8;
+      color-scheme: light dark;
+      --bg: light-dark(#F0EAD8, #212622);
+      --text: light-dark(#212622, #EDE7D8);
+      --text-muted: light-dark(#4E5E4E, #8A9E8A);
+      --border: light-dark(#E2DAC8, #334A33);
       --accent: #D25530;
       --font: 'Geist', system-ui, sans-serif;
       --mono: 'Cascadia Mono', 'Courier New', monospace;
@@ -26,11 +35,12 @@
       --max-width: 720px;
     }
 
-    [data-theme="dark"] {
-      --bg: #212622;
-      --text: #EDE7D8;
-      --text-muted: #8A9E8A;
-      --border: #334A33;
+    /* A pinned choice (set by the toggle) overrides the OS scheme */
+    :root[data-theme="light"] { color-scheme: light; }
+    :root[data-theme="dark"]  { color-scheme: dark; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      @view-transition { navigation: auto; }
     }
 
     html { -webkit-font-smoothing: antialiased; }
@@ -307,10 +317,16 @@
     const blockFr = document.getElementById('block-fr');
     const blockEn = document.getElementById('block-en');
 
-    // Language — detect or restore
-    const stored = localStorage.getItem('lang');
+    // Storage can throw (private mode, blocked site data)
+    const storage = {
+      get(key) { try { return localStorage.getItem(key); } catch { return null; } },
+      set(key, value) { try { localStorage.setItem(key, value); } catch { /* ignore */ } },
+      remove(key) { try { localStorage.removeItem(key); } catch { /* ignore */ } },
+    };
+
+    // Language — a stored choice wins, otherwise follow the browser
     const detected = (navigator.language || '').startsWith('fr') ? 'fr' : 'en';
-    let lang = stored || detected;
+    let lang = storage.get('lang') || detected;
 
     function applyLang(l) {
       lang = l;
@@ -326,27 +342,55 @@
         langToggle.textContent = '[ FR ]';
         document.title = 'Privacy Policy — DRNDT Studio';
       }
-      localStorage.setItem('lang', l);
     }
 
     applyLang(lang);
-    langToggle.addEventListener('click', () => applyLang(lang === 'fr' ? 'en' : 'fr'));
+    langToggle.addEventListener('click', () => {
+      const next = lang === 'fr' ? 'en' : 'fr';
+      storage.set('lang', next);
+      applyLang(next);
+    });
 
-    // Theme — detect or restore
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    let theme = savedTheme || (prefersDark ? 'dark' : 'light');
+    // Theme — follows the OS (CSS color-scheme + light-dark()) unless the visitor pinned one;
+    // toggling to the OS value again clears the pin
+    const root = document.documentElement;
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const THEME_COLORS = { light: '#F0EAD8', dark: '#212622' };
 
-    function applyTheme(t) {
-      theme = t;
-      document.body.setAttribute('data-theme', t === 'dark' ? 'dark' : '');
-      if (t !== 'dark') document.body.removeAttribute('data-theme');
-      themeToggle.textContent = t === 'dark' ? '[ Light ]' : '[ Dark ]';
-      localStorage.setItem('theme', t);
+    function pinnedTheme() {
+      const stored = storage.get('theme');
+      return stored === 'light' || stored === 'dark' ? stored : null;
     }
 
-    applyTheme(theme);
-    themeToggle.addEventListener('click', () => applyTheme(theme === 'dark' ? 'light' : 'dark'));
+    function effectiveTheme() {
+      return pinnedTheme() ?? (systemDark.matches ? 'dark' : 'light');
+    }
+
+    function renderTheme() {
+      const theme = effectiveTheme();
+      const pinned = pinnedTheme();
+      if (pinned) {
+        root.dataset.theme = pinned;
+      } else {
+        delete root.dataset.theme;
+      }
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_COLORS[theme]);
+      themeToggle.textContent = theme === 'dark' ? '[ Light ]' : '[ Dark ]';
+    }
+
+    function toggleTheme() {
+      const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
+      if (next === (systemDark.matches ? 'dark' : 'light')) {
+        storage.remove('theme');
+      } else {
+        storage.set('theme', next);
+      }
+      renderTheme();
+    }
+
+    renderTheme();
+    systemDark.addEventListener('change', renderTheme);
+    themeToggle.addEventListener('click', toggleTheme);
   </script>
 </body>
 </html>

@@ -5,31 +5,136 @@
     return a + (b - a) * t;
   }
 
+  // Storage can throw (private mode, blocked site data) — never let that stop the page
+  const storage = {
+    get(key) {
+      try { return localStorage.getItem(key); } catch { return null; }
+    },
+    set(key, value) {
+      try { localStorage.setItem(key, value); } catch { /* ignore */ }
+    },
+    remove(key) {
+      try { localStorage.removeItem(key); } catch { /* ignore */ }
+    },
+  };
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+  const supportsViewTimeline = CSS.supports('(animation-timeline: view()) and (animation-range: entry)');
+  const supportsScrollTimeline = CSS.supports('animation-timeline: scroll()');
+
   /* -----------------------------------------------
-     Preloader
+     View transitions — morph the work card <-> case-study header
+     (the cross-fade itself is opt-in from CSS; this script is
+     render-blocking so both listeners exist before first paint)
      ----------------------------------------------- */
-  const preloader = document.getElementById('preloader');
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      preloader.setAttribute('aria-hidden', 'true');
-      preloader.classList.add('is-done');
-      setTimeout(() => preloader.remove(), 800);
-    }, 1200);
+  const CASE_SLUGS = ['sofia', 'vantage', 'dord'];
+
+  // 'sofia.html' and '/sofia' both -> 'sofia'; home -> '' or 'index'
+  function pageSlug(url) {
+    return new URL(url, location.href).pathname.replace(/\.html$/, '').replace(/^\/+|\/+$/g, '');
+  }
+
+  function isHome(slug) {
+    return slug === '' || slug === 'index';
+  }
+
+  // The element that should morph on `page`, for a navigation to/from `other`
+  function morphTarget(page, other) {
+    if (isHome(page) && CASE_SLUGS.includes(other)) {
+      const card = document.querySelector(`a.work__grid-item[href="${other}.html"] .work__grid-img-wrap`);
+      if (!card) return null;
+      const rect = card.getBoundingClientRect();
+      return rect.bottom > 0 && rect.top < window.innerHeight ? card : null;
+    }
+    if (CASE_SLUGS.includes(page) && isHome(other)) {
+      return document.getElementById('case-hero');
+    }
+    return null;
+  }
+
+  // Outgoing page: name the element before the browser captures the old state
+  window.addEventListener('pageswap', (e) => {
+    if (!e.viewTransition || !e.activation) return;
+    const target = morphTarget(pageSlug(location.href), pageSlug(e.activation.entry.url));
+    if (target) target.style.viewTransitionName = 'case-hero';
+  });
+
+  // Incoming page: name the matching element, then clean up so the page stays bfcache-eligible
+  window.addEventListener('pagereveal', async (e) => {
+    if (!e.viewTransition) return;
+    const from = window.navigation?.activation?.from;
+    if (!from) return;
+    // "Back to work" links to /#work; the browser applies that scroll after first paint,
+    // so do it now to have the card on screen when the new state is captured
+    if (isHome(pageSlug(location.href)) && location.hash.length > 1) {
+      try { document.querySelector(location.hash)?.scrollIntoView({ behavior: 'instant' }); } catch { /* invalid selector */ }
+    }
+    const target = morphTarget(pageSlug(location.href), pageSlug(from.url));
+    if (!target) return;
+    target.style.viewTransitionName = 'case-hero';
+    await e.viewTransition.finished;
+    target.style.viewTransitionName = '';
+  });
+
+  // A page restored from bfcache may still carry the name set in pageswap
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+      document.querySelectorAll('[style*="view-transition-name"]').forEach((el) => {
+        el.style.viewTransitionName = '';
+      });
+    }
   });
 
   /* -----------------------------------------------
-     Smooth scroll engine — wheel-based lerp
+     Preloader — splash on arrival, skipped when navigating
+     inside the site (flagged by the inline <head> script)
      ----------------------------------------------- */
-  if (!('ontouchstart' in window) && window.innerWidth > 640 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const preloader = document.getElementById('preloader');
+  if (preloader) {
+    if (document.documentElement.classList.contains('no-preloader')) {
+      preloader.remove();
+    } else {
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          preloader.setAttribute('aria-hidden', 'true');
+          preloader.classList.add('is-done');
+          setTimeout(() => preloader.remove(), 800);
+        }, 1200);
+      });
+    }
+  }
+
+  /* -----------------------------------------------
+     Smooth scroll engine — wheel-based lerp
+     (anchor links on touch / narrow screens use CSS scroll-behavior)
+     ----------------------------------------------- */
+  if (!('ontouchstart' in window) && window.innerWidth > 640 && !reducedMotion.matches) {
     let scrollTargetY = window.scrollY;
     let scrollCurrentY = window.scrollY;
-    let isWheelScroll = false;
+    let smoothScrollRafId = 0;
+
+    // Only spin the frame loop while there is distance left to cover
+    function smoothScrollLoop() {
+      smoothScrollRafId = 0;
+      if (Math.abs(scrollCurrentY - scrollTargetY) > 0.5) {
+        scrollCurrentY = lerp(scrollCurrentY, scrollTargetY, 0.20);
+        window.scrollTo({ top: scrollCurrentY, behavior: 'instant' });
+        smoothScrollRafId = requestAnimationFrame(smoothScrollLoop);
+      }
+    }
+
+    function startSmoothScroll() {
+      if (!smoothScrollRafId) smoothScrollRafId = requestAnimationFrame(smoothScrollLoop);
+    }
 
     window.addEventListener('wheel', (e) => {
+      // Let an open modal (lightbox) handle its own wheel input
+      if (e.target instanceof Element && e.target.closest('dialog[open]')) return;
       e.preventDefault();
-      isWheelScroll = true;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       scrollTargetY = Math.max(0, Math.min(scrollTargetY + e.deltaY, maxScroll));
+      startSmoothScroll();
     }, { passive: false });
 
     // Intercept anchor clicks — set scrollTargetY directly to avoid lerp/jump race
@@ -41,28 +146,19 @@
         if (target) {
           e.preventDefault();
           scrollTargetY = target.getBoundingClientRect().top + window.scrollY;
+          startSmoothScroll();
         }
       });
     });
 
-    // Sync with keyboard scroll, programmatic scrollTo
+    // Sync when something other than this loop moved the page (keyboard, scrollbar drag, find-in-page).
+    // Our own scrollTo calls land within a pixel of scrollCurrentY, so they leave the target alone.
     window.addEventListener('scroll', () => {
-      if (!isWheelScroll) {
+      if (Math.abs(window.scrollY - scrollCurrentY) > 2) {
         scrollTargetY = window.scrollY;
         scrollCurrentY = window.scrollY;
       }
-      isWheelScroll = false;
     }, { passive: true });
-
-    let smoothScrollRafId;
-    function smoothScrollLoop() {
-      if (Math.abs(scrollCurrentY - scrollTargetY) > 0.5) {
-        scrollCurrentY = lerp(scrollCurrentY, scrollTargetY, 0.20);
-        window.scrollTo(0, scrollCurrentY);
-      }
-      smoothScrollRafId = requestAnimationFrame(smoothScrollLoop);
-    }
-    smoothScrollLoop();
   }
 
   /* -----------------------------------------------
@@ -78,6 +174,7 @@
   const translations = {
     en: {
       'nav-contact': '03 — Contact',
+      'nav-menu': '[ Menu ]',
       'nav-work': '01 — Work',
       'nav-about': '02 — About',
       'nav-cta': 'Book a Call',
@@ -118,6 +215,8 @@
       'cs-next-next-label': '[ Next ]',
       'cs-next-next-link': 'Back to all work →',
       'cs-have-project': 'Have a project in mind?',
+      'cs-zoom': 'Enlarge image',
+      'cs-close-label': '[ Close ]',
       // ── DORD ──
       'dord-sector': '[ Sector: Motorsport ]',
       'dord-badge-deliverable': '[ Deliverable: Branding & Web ]',
@@ -212,9 +311,51 @@
       'sofia-cta': 'Have a product that\'s outgrown its design?',
       'sofia-next-label': '[ Next ]',
       'sofia-next-link': 'Back to all work →',
+      'pinpire-sector': '[ Sector: Web Game ]',
+      'pinpire-badge-role': '[ Role: Designer & Owner ]',
+      'pinpire-badge-scope': '[ Scope: Concept + UI Design ]',
+      'pinpire-badge-built': '[ Built with: Claude Code ]',
+      'pinpire-badge-status': '[ Status: Live — redesign in progress ]',
+      'pinpire-hero-problem': 'A map quiz where the year you choose decides which empires and kingdoms exist.',
+      'pinpire-stat-type': 'Web game',
+      'pinpire-stat-label-type': 'Type',
+      'pinpire-stat-status': 'Live',
+      'pinpire-stat-label-status': 'Status',
+      'pinpire-stat-host': 'Cloudflare',
+      'pinpire-stat-label-host': 'Hosted on',
+      'pinpire-01-label': '01 — Context',
+      'pinpire-01-title': 'What is Pinpire?',
+      'pinpire-01-p1': 'Pinpire is a browser-based historical map quiz in the style of Seterra. You pick a region and a year, then click the historical polities — the empires, kingdoms and states of that era — on the map.',
+      'pinpire-01-p2': 'It keeps the Seterra format, find a place on a map, and adds time: the year you choose decides which polities exist on the map. I designed it, and built it with Claude Code.',
+      'pinpire-02-label': '02 — How it plays',
+      'pinpire-02-title': 'Pick a region. Pick a year. Start pinning.',
+      'pinpire-02-p1': '<strong>Pick a region</strong> — a continent, or the states of the US.',
+      'pinpire-02-p2': '<strong>Pick a year</strong> — it sets which empires, kingdoms and states are on the map.',
+      'pinpire-02-p3': '<strong>Click the polities</strong> — find each one on the map as it\'s asked.',
+      'pinpire-03-label': '03 — Design',
+      'pinpire-03-title': 'Designed first, built second.',
+      'pinpire-03-p1': 'I\'m the sole designer and owner of Pinpire. The workflow is design first: I lay out the interface in Figma, then hand it to Claude Code to build.',
+      'pinpire-03-p2': 'The game is live and playable today, and its interface is being reworked. The screens on this page are that redesign — still in design, not yet implemented.',
+      'pinpire-03-p3': 'The name took a few tries. The project started as Chrono Pin, then became Pin the Past — until other games turned out to use that name, or one very close to it. The new name had to start with “Pin” so my pin logo would still fit. That led to Pinpire.',
+      'pinpire-04-label': '04 — Build',
+      'pinpire-04-title': 'How it was made.',
+      'pinpire-04-p1': '<strong>Figma</strong> — the interface is laid out there first, screen by screen.',
+      'pinpire-04-p2': '<strong>Claude Code</strong> — it does the implementation, working from my designs.',
+      'pinpire-04-p3': '<strong>Cloudflare Workers</strong> — the game runs on Workers, and the pinpire.com domain is registered with Cloudflare too.',
+      'pinpire-05-label': '05 — Roadmap',
+      'pinpire-05-title': 'What\'s next.',
+      'pinpire-05-p0': 'The core quiz is live. Everything below is planned or only being considered — none of it has shipped.',
+      'pinpire-05-p1': '<strong>UI rework</strong> — In design. Being designed in Figma, then implemented by Claude Code.',
+      'pinpire-05-p2': '<strong>Flags</strong> — Under consideration. The next update candidate.',
+      'pinpire-05-p3': '<strong>Text-to-speech</strong> — Under consideration. Country names read aloud, with a free option preferred over a paid service.',
+      'pinpire-05-p4': '<strong>Neighbours mode</strong> — An idea. A random country comes up and you guess every country that borders it; France\'s answer includes Brazil and Suriname. It would start with present-day countries, with past eras maybe later.',
+      'pinpire-06-label': '06 — Play',
+      'pinpire-06-title': 'Try it yourself.',
+      'pinpire-visit': 'Play Pinpire →',
     },
     fr: {
       'nav-contact': '03 — Contact',
+      'nav-menu': '[ Menu ]',
       'nav-work': '01 — Travaux',
       'nav-about': '02 — À propos',
       'nav-cta': 'Prendre rendez-vous',
@@ -255,6 +396,8 @@
       'cs-next-next-label': '[ Suivant ]',
       'cs-next-next-link': 'Retour à tous les travaux →',
       'cs-have-project': 'Un projet en tête ?',
+      'cs-zoom': 'Agrandir l\'image',
+      'cs-close-label': '[ Fermer ]',
       // ── DORD ──
       'dord-sector': '[ Secteur : Motorsport ]',
       'dord-badge-deliverable': '[ Livrable : Branding & Web ]',
@@ -349,13 +492,47 @@
       'sofia-cta': 'Vous avez un produit qui a dépassé son design ?',
       'sofia-next-label': '[ Suivant ]',
       'sofia-next-link': 'Retour à tous les travaux →',
+      'pinpire-sector': '[ Secteur : Jeu web ]',
+      'pinpire-badge-role': '[ Rôle : Designer & porteur du projet ]',
+      'pinpire-badge-scope': '[ Périmètre : Concept + UI design ]',
+      'pinpire-badge-built': '[ Construit avec : Claude Code ]',
+      'pinpire-badge-status': '[ Statut : En ligne — refonte en cours ]',
+      'pinpire-hero-problem': 'Un quiz cartographique où l\'année choisie décide quels empires et quels royaumes existent.',
+      'pinpire-stat-type': 'Jeu web',
+      'pinpire-stat-label-type': 'Type',
+      'pinpire-stat-status': 'En ligne',
+      'pinpire-stat-label-status': 'Statut',
+      'pinpire-stat-host': 'Cloudflare',
+      'pinpire-stat-label-host': 'Hébergé sur',
+      'pinpire-01-label': '01 — Contexte',
+      'pinpire-01-title': 'Qu\'est-ce que Pinpire ?',
+      'pinpire-01-p1': 'Pinpire est un quiz de cartes historiques, jouable dans le navigateur, dans l\'esprit de Seterra. On choisit une région et une année, puis on clique sur les entités politiques de l\'époque — empires, royaumes et États — sur la carte.',
+      'pinpire-01-p2': 'Il garde le format de Seterra, retrouver un lieu sur une carte, et y ajoute le temps : l\'année choisie détermine quelles entités politiques existent sur la carte. Je l\'ai conçu, puis construit avec Claude Code.',
+      'pinpire-02-label': '02 — Le jeu',
+      'pinpire-02-title': 'Une région. Une année. À vos épingles.',
+      'pinpire-02-p1': '<strong>Choisir une région</strong> — un continent, ou les États américains.',
+      'pinpire-02-p2': '<strong>Choisir une année</strong> — elle détermine quels empires, royaumes et États figurent sur la carte.',
+      'pinpire-02-p3': '<strong>Cliquer sur les entités</strong> — retrouvez chacune sur la carte, au fil des questions.',
+      'pinpire-03-label': '03 — Design',
+      'pinpire-03-title': 'Conçu d\'abord, construit ensuite.',
+      'pinpire-03-p1': 'Je suis l\'unique designer et le propriétaire de Pinpire. Le workflow est « design d\'abord » : je dessine l\'interface dans Figma, puis je construis le site.',
+      'pinpire-03-p2': 'Le jeu est en ligne et jouable dès aujourd\'hui, et son interface est finie',
+      'pinpire-03-p3': 'Le nom a demandé plusieurs essais. Le projet s\'appelait d\'abord Chrono Pin, puis Pin the Past — jusqu\'à ce que d\'autres jeux utilisent déjà ce nom, ou un nom très proche. Le nouveau nom devait commencer par « Pin » pour que mon logo en forme d\'épingle fonctionne toujours. D\'où Pinpire.',
+      'pinpire-04-label': '04 — Fabrication',
+      'pinpire-04-title': 'Comment il a été fait.',
+      'pinpire-04-p1': '<strong>Figma</strong> — l\'interface y est d\'abord dessinée, écran par écran.',
+      'pinpire-04-p2': '<strong>React & Vue</strong> — afin d\'implémenter, à partir de mes maquettes.',
+      'pinpire-04-p3': '<strong>Cloudflare Workers</strong> — le jeu tourne sur Workers, et le domaine pinpire.com est lui aussi enregistré chez Cloudflare.',
+      'pinpire-05-label': '05 — Jouer',
+      'pinpire-05-title': 'Essayez-le vous-même.',
+      'pinpire-visit': 'Jouer à Pinpire →',
     },
   };
 
   const langToggle = document.getElementById('langToggle');
   const langToggleMobile = document.getElementById('langToggleMobile');
   const detectedLang = (navigator.language || '').startsWith('fr') ? 'fr' : 'en';
-  let currentLang = localStorage.getItem('lang') || detectedLang;
+  let currentLang = storage.get('lang') || detectedLang;
 
   function applyLang(lang) {
     currentLang = lang;
@@ -375,6 +552,14 @@
       }
     });
 
+    document.querySelectorAll('[data-i18n-label]').forEach((el) => {
+      const label = translations[lang][el.dataset.i18nLabel];
+      if (label !== undefined) {
+        const suffix = el.dataset.i18nSuffix;
+        el.setAttribute('aria-label', suffix ? `${label}: ${suffix}` : label);
+      }
+    });
+
     if (langToggle) {
       langToggle.textContent = lang === 'en' ? '[ FR ]' : '[ EN ]';
       langToggle.setAttribute('aria-label', lang === 'en' ? 'Switch language to French' : 'Switch language to English');
@@ -383,139 +568,220 @@
       langToggleMobile.textContent = lang === 'en' ? '[ FR ]' : '[ EN ]';
       langToggleMobile.setAttribute('aria-label', lang === 'en' ? 'Switch language to French' : 'Switch language to English');
     }
-    localStorage.setItem('lang', lang);
+    window.dispatchEvent(new Event('langchange'));
+  }
+
+  // Persist only an explicit choice, so a visitor who never toggles keeps following their browser language
+  function toggleLang() {
+    const next = currentLang === 'en' ? 'fr' : 'en';
+    storage.set('lang', next);
+    applyLang(next);
   }
 
   applyLang(currentLang);
 
   if (langToggle) {
-    langToggle.addEventListener('click', () => {
-      applyLang(currentLang === 'en' ? 'fr' : 'en');
-    });
+    langToggle.addEventListener('click', toggleLang);
   }
 
   /* -----------------------------------------------
      Dark mode — init + toggle
      ----------------------------------------------- */
+  // With no stored choice the page follows the OS (CSS color-scheme + light-dark()).
+  // The toggle pins the opposite scheme; toggling back returns to following the OS.
+  const root = document.documentElement;
   const themeToggle = document.getElementById('themeToggle');
   const themeToggleMobile = document.getElementById('themeToggleMobile');
-  const savedTheme = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  let currentTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+  const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+  const THEME_COLORS = { light: '#F0EAD8', dark: '#212622' };
 
-  function applyTheme(theme) {
-    currentTheme = theme;
-    if (theme === 'dark') {
-      document.body.setAttribute('data-theme', 'dark');
-      if (themeToggle) {
-        themeToggle.textContent = '[ Light ]';
-        themeToggle.setAttribute('aria-label', 'Switch to light mode');
-      }
-    } else {
-      document.body.removeAttribute('data-theme');
-      if (themeToggle) {
-        themeToggle.textContent = '[ Dark ]';
-        themeToggle.setAttribute('aria-label', 'Switch to dark mode');
-      }
-    }
-    if (themeToggleMobile) {
-      themeToggleMobile.textContent = theme === 'dark' ? '[ Light ]' : '[ Dark ]';
-      themeToggleMobile.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
-    }
-    localStorage.setItem('theme', theme);
+  function pinnedTheme() {
+    const stored = storage.get('theme');
+    return stored === 'light' || stored === 'dark' ? stored : null;
   }
 
-  applyTheme(currentTheme);
+  function effectiveTheme() {
+    return pinnedTheme() ?? (systemDark.matches ? 'dark' : 'light');
+  }
 
-  if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-      applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+  function renderTheme() {
+    const theme = effectiveTheme();
+    const pinned = pinnedTheme();
+    if (pinned) {
+      root.dataset.theme = pinned;
+    } else {
+      delete root.dataset.theme;
+    }
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_COLORS[theme]);
+
+    const label = theme === 'dark' ? '[ Light ]' : '[ Dark ]';
+    const ariaLabel = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+    [themeToggle, themeToggleMobile].forEach((btn) => {
+      if (!btn) return;
+      btn.textContent = label;
+      btn.setAttribute('aria-label', ariaLabel);
     });
   }
 
-  // Mobile footer toggles (may not exist on sofia.html — guard with if)
-  if (langToggleMobile) {
-    langToggleMobile.addEventListener('click', () => applyLang(currentLang === 'en' ? 'fr' : 'en'));
+  function toggleTheme() {
+    const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
+    const system = systemDark.matches ? 'dark' : 'light';
+    if (next === system) {
+      storage.remove('theme');
+    } else {
+      storage.set('theme', next);
+    }
+    renderTheme();
   }
 
-  if (themeToggleMobile) {
-    themeToggleMobile.addEventListener('click', () => applyTheme(currentTheme === 'dark' ? 'light' : 'dark'));
+  renderTheme();
+  systemDark.addEventListener('change', renderTheme);
+
+  if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+
+  // Mobile footer toggles
+  if (langToggleMobile) langToggleMobile.addEventListener('click', toggleLang);
+  if (themeToggleMobile) themeToggleMobile.addEventListener('click', toggleTheme);
+
+  /* -----------------------------------------------
+     Image lightbox — native <dialog> (case-study pages)
+     Images are wrapped in buttons here, so the HTML stays plain <img> without JS.
+     Built before the cursor setup so the buttons get the hover treatment too.
+     ----------------------------------------------- */
+  const caseImages = document.querySelectorAll('.cs-img img');
+  if (caseImages.length) {
+    const lightbox = document.createElement('dialog');
+    lightbox.className = 'lightbox';
+
+    const lightboxImg = document.createElement('img');
+    lightboxImg.className = 'lightbox__img';
+
+    const closeForm = document.createElement('form');
+    closeForm.method = 'dialog';
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'lightbox__close';
+    closeBtn.dataset.i18n = 'cs-close-label';
+    closeBtn.textContent = translations[currentLang]['cs-close-label'];
+    closeForm.append(closeBtn);
+
+    lightbox.append(lightboxImg, closeForm);
+    document.body.append(lightbox);
+
+    // A click anywhere (backdrop or image) closes; Esc and the close button work natively
+    lightbox.addEventListener('click', () => lightbox.close());
+
+    // Largest candidate from srcset, falling back to what the page already loaded
+    function largestSource(img) {
+      const candidates = (img.srcset || '')
+        .split(',')
+        .map((entry) => entry.trim().split(/\s+/))
+        .filter(([url, descriptor]) => url && descriptor && descriptor.endsWith('w'))
+        .map(([url, descriptor]) => ({ url, width: parseInt(descriptor, 10) }))
+        .sort((a, b) => b.width - a.width);
+      return candidates.length ? candidates[0].url : img.currentSrc || img.src;
+    }
+
+    caseImages.forEach((img) => {
+      const zoom = document.createElement('button');
+      zoom.type = 'button';
+      zoom.className = 'cs-img__zoom';
+      zoom.dataset.i18nLabel = 'cs-zoom';
+      zoom.dataset.i18nSuffix = img.alt;
+      zoom.setAttribute('aria-label', `${translations[currentLang]['cs-zoom']}: ${img.alt}`);
+      img.replaceWith(zoom);
+      zoom.append(img);
+
+      zoom.addEventListener('click', () => {
+        lightboxImg.src = largestSource(img);
+        lightboxImg.alt = img.alt;
+        lightbox.setAttribute('aria-label', img.alt);
+        lightbox.showModal();
+      });
+    });
   }
 
   /* -----------------------------------------------
-     Custom Cursor — dot + ring
+     Custom Cursor — dot + ring (fine pointers only)
      ----------------------------------------------- */
   const dot = document.querySelector('.cursor-dot');
   const ring = document.querySelector('.cursor-ring');
 
-  let mouseX = 0;
-  let mouseY = 0;
-  let dotX = 0;
-  let dotY = 0;
-  let ringX = 0;
-  let ringY = 0;
+  if (dot && ring && finePointer.matches) {
+    let mouseX = 0;
+    let mouseY = 0;
+    let dotX = 0;
+    let dotY = 0;
+    let ringX = 0;
+    let ringY = 0;
+    let cursorRafId = 0;
 
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
+    // Only run the frame loop while the cursor is still catching up with the pointer
+    function animateCursor() {
+      // Dot snaps fast
+      dotX = lerp(dotX, mouseX, 0.6);
+      dotY = lerp(dotY, mouseY, 0.6);
+      dot.style.transform = `translate(${dotX - 3}px, ${dotY - 3}px)`;
 
-  let cursorRafId;
-  function animateCursor() {
-    // Dot snaps fast
-    dotX = lerp(dotX, mouseX, 0.6);
-    dotY = lerp(dotY, mouseY, 0.6);
-    dot.style.transform = `translate(${dotX - 3}px, ${dotY - 3}px)`;
+      // Ring lerps slower
+      ringX = lerp(ringX, mouseX, 0.12);
+      ringY = lerp(ringY, mouseY, 0.12);
+      ring.style.transform = `translate(${ringX - 18}px, ${ringY - 18}px)`;
 
-    // Ring lerps slower
-    ringX = lerp(ringX, mouseX, 0.12);
-    ringY = lerp(ringY, mouseY, 0.12);
-    ring.style.transform = `translate(${ringX - 18}px, ${ringY - 18}px)`;
+      const settled = Math.abs(mouseX - ringX) < 0.1 && Math.abs(mouseY - ringY) < 0.1;
+      cursorRafId = settled ? 0 : requestAnimationFrame(animateCursor);
+    }
 
-    cursorRafId = requestAnimationFrame(animateCursor);
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (!cursorRafId) cursorRafId = requestAnimationFrame(animateCursor);
+    });
+
+    animateCursor();
+
+    // Inject label span into ring
+    const cursorLabel = document.createElement('span');
+    cursorLabel.className = 'cursor-label';
+    ring.appendChild(cursorLabel);
+
+    // Hover scale on interactive elements (contact CTA gets special label below)
+    const hoverTargets = document.querySelectorAll('a:not(.contact__cta), button, [data-hoverable]');
+    hoverTargets.forEach((el) => {
+      el.addEventListener('mouseenter', () => ring.classList.add('is-hover'));
+      el.addEventListener('mouseleave', () => ring.classList.remove('is-hover'));
+    });
+
+    // Cursor label on a target: [selector, label]
+    [
+      ['.contact__cta', 'Mail'],
+      ['div.work__grid-item', '[ — ]'],  // unavailable grid items
+      ['.cs-img__zoom', '[ + ]'],        // lightbox triggers
+    ].forEach(([selector, label]) => {
+      document.querySelectorAll(selector).forEach((el) => {
+        el.addEventListener('mouseenter', () => {
+          cursorLabel.textContent = label;
+          ring.classList.add('is-project-hover');
+          ring.classList.remove('is-hover'); // prevent size conflict
+        });
+        el.addEventListener('mouseleave', () => {
+          cursorLabel.textContent = '';
+          ring.classList.remove('is-project-hover');
+        });
+      });
+    });
   }
 
-  animateCursor();
-
-  // Inject label span into ring
-  const cursorLabel = document.createElement('span');
-  cursorLabel.className = 'cursor-label';
-  ring.appendChild(cursorLabel);
-
-  // Hover scale on interactive elements (contact CTA gets special label below)
-  const hoverTargets = document.querySelectorAll('a:not(.contact__cta), button, [data-hoverable]');
-  hoverTargets.forEach((el) => {
-    el.addEventListener('mouseenter', () => ring.classList.add('is-hover'));
-    el.addEventListener('mouseleave', () => ring.classList.remove('is-hover'));
-  });
-
-  // Cursor label — contact CTA
-  const contactCta = document.querySelector('.contact__cta');
-  if (contactCta) {
-    contactCta.addEventListener('mouseenter', () => {
-      cursorLabel.textContent = 'Mail';
-      ring.classList.add('is-project-hover');
-    });
-    contactCta.addEventListener('mouseleave', () => {
-      cursorLabel.textContent = '';
-      ring.classList.remove('is-project-hover');
+  /* -----------------------------------------------
+     Phone menu (native popover): close it once a link inside is followed
+     ----------------------------------------------- */
+  const navMenu = document.getElementById('navLinks');
+  if (navMenu && typeof navMenu.hidePopover === 'function') {
+    navMenu.addEventListener('click', (e) => {
+      if (e.target instanceof Element && e.target.closest('a') && navMenu.matches(':popover-open')) {
+        navMenu.hidePopover();
+      }
     });
   }
-
-  // Cursor label — unavailable grid items
-  const unavailableItems = document.querySelectorAll('div.work__grid-item');
-  unavailableItems.forEach((el) => {
-    el.addEventListener('mouseenter', () => {
-      cursorLabel.textContent = '[ — ]';
-      ring.classList.add('is-project-hover');
-      ring.classList.remove('is-hover'); // prevent size conflict
-    });
-    el.addEventListener('mouseleave', () => {
-      cursorLabel.textContent = '';
-      ring.classList.remove('is-project-hover');
-    });
-  });
-
 
   /* -----------------------------------------------
      Nav scroll state
@@ -548,23 +814,25 @@
   window.addEventListener('scroll', updateNav, { passive: true });
 
   /* -----------------------------------------------
-     [data-reveal] — IntersectionObserver
+     [data-reveal] — IntersectionObserver fallback
+     Browsers with scroll-driven animations reveal via CSS (animation-timeline: view()),
+     and reduced-motion users see everything straight away, so only the rest need this.
      ----------------------------------------------- */
-  const revealEls = document.querySelectorAll('[data-reveal]');
+  if (!supportsViewTimeline && !reducedMotion.matches) {
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
 
-  const revealObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-revealed');
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.12 }
-  );
-
-  revealEls.forEach((el) => revealObserver.observe(el));
+    document.querySelectorAll('[data-reveal]').forEach((el) => revealObserver.observe(el));
+  }
 
   /* -----------------------------------------------
      Magnetic hover — nav links & CTA
@@ -595,95 +863,90 @@
 
 
   /* -----------------------------------------------
-     Altimeter — scroll-driven, m/ft toggle
+     Altimeter — scroll-driven, m/ft toggle (home page only)
      ----------------------------------------------- */
   const altValue = document.querySelector('.altimeter__value');
   const altUnit = document.querySelector('.altimeter__unit');
   const altBar = document.querySelector('.altimeter__bar');
   const altBarFill = document.querySelector('.altimeter__bar-fill');
-  let useMeters = true;
-  const MAX_ALT_M = 4810; // Mont Blanc
 
-  function updateAltimeter() {
-    const scrollH = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = scrollH > 0 ? window.scrollY / scrollH : 0;
-    const altM = Math.round(progress * MAX_ALT_M);
-    const altFt = Math.round(altM * 3.28084);
+  if (altValue && altUnit && altBar && altBarFill) {
+    let useMeters = true;
+    const MAX_ALT_M = 4810; // Mont Blanc
+    // The bar fills from a CSS scroll timeline; set --alt-progress only where that isn't available
+    const barNeedsScript = !supportsScrollTimeline || reducedMotion.matches;
 
-    altValue.textContent = useMeters
-      ? altM.toLocaleString()
-      : altFt.toLocaleString();
-    altBarFill.style.height = `${progress * 100}%`;
-  }
+    function updateAltimeter() {
+      const scrollH = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollH > 0 ? window.scrollY / scrollH : 0;
+      const altM = Math.round(progress * MAX_ALT_M);
+      const altFt = Math.round(altM * 3.28084);
 
-  function toggleUnit() {
-    useMeters = !useMeters;
-    altUnit.textContent = useMeters ? 'm' : 'ft';
+      altValue.textContent = useMeters
+        ? altM.toLocaleString()
+        : altFt.toLocaleString();
+      if (barNeedsScript) altBarFill.style.setProperty('--alt-progress', progress);
+    }
+
+    function toggleUnit() {
+      useMeters = !useMeters;
+      altUnit.textContent = useMeters ? 'm' : 'ft';
+      updateAltimeter();
+    }
+
+    // Both controls are <button>s, so Enter/Space activate them natively
+    altUnit.addEventListener('click', toggleUnit);
+    altBar.addEventListener('click', toggleUnit);
+
+    window.addEventListener('scroll', updateAltimeter, { passive: true });
     updateAltimeter();
   }
 
-  altUnit.addEventListener('click', toggleUnit);
-  altBar.addEventListener('click', toggleUnit);
-
-  altUnit.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleUnit(); }
-  });
-  altBar.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleUnit(); }
-  });
-
-  window.addEventListener('scroll', updateAltimeter, { passive: true });
-  updateAltimeter();
-
   /* -----------------------------------------------
-     Single visibilitychange handler for RAFs
-     (smooth scroll only exists on non-touch desktop)
+     Illustration parallax — scroll fallback
+     (browsers with scroll-driven animations do this in CSS)
      ----------------------------------------------- */
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      if (typeof smoothScrollRafId !== 'undefined') cancelAnimationFrame(smoothScrollRafId);
-      cancelAnimationFrame(cursorRafId);
-    } else {
-      if (typeof smoothScrollLoop !== 'undefined') smoothScrollLoop();
-      animateCursor();
-    }
-  });
-
-  // ── Illustration parallax ──────────────────────────
-  (function () {
+  if (!supportsViewTimeline && !reducedMotion.matches) {
     const items = [
       { selector: '.hero__painting img',   depth: 0.15 },
       { selector: '.scene-break img',      depth: 0.30 },
     ]
-      .map(({ selector, depth }) => ({ el: document.querySelector(selector), depth }))
-      .filter(({ el }) => el !== null);
+      .map(({ selector, depth }) => {
+        const el = document.querySelector(selector);
+        return { el, wrapper: el?.closest('.hero__painting, .scene-break'), depth };
+      })
+      .filter(({ el, wrapper }) => el && wrapper);
 
-    if (!items.length) return;
+    if (items.length) {
+      const tick = () => {
+        items.forEach(({ el, wrapper, depth }) => {
+          const rect = wrapper.getBoundingClientRect();
+          if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+          const center = rect.top + rect.height / 2 - window.innerHeight / 2;
+          el.style.translate = `0 ${center * depth * -1}px`;
+        });
+      };
 
-    function tick() {
-      const scrollY = window.scrollY;
-      items.forEach(({ el, depth }) => {
-        const rect = el.parentElement.getBoundingClientRect();
-        if (rect.bottom < 0 || rect.top > window.innerHeight) return;
-        const center = rect.top + rect.height / 2 - window.innerHeight / 2;
-        el.style.transform = `translateY(${center * depth * -1}px)`;
-      });
+      window.addEventListener('scroll', tick, { passive: true });
+      tick();
     }
+  }
 
-    window.addEventListener('scroll', tick, { passive: true });
-    tick();
-  })();
-
-  // ── Contact image — match body height at 3:5 ratio ──
-  (function () {
-    const body = document.querySelector('.contact__body');
-    const bg   = document.querySelector('.contact__bg');
-    if (!body || !bg) return;
-    function syncContactImage() {
-      if (window.innerWidth <= 768) { bg.style.width = ''; return; }
-      bg.style.width = (body.offsetHeight * 3 / 5) + 'px';
-    }
+  /* -----------------------------------------------
+     Contact image — match body height at 3:5 ratio
+     Also re-synced after web fonts load and after a language switch, which change
+     the body height without a window resize. (Not a ResizeObserver: the image width
+     feeds back into the body's text wrapping, so observing it could oscillate.)
+     ----------------------------------------------- */
+  const contactBody = document.querySelector('.contact__body');
+  const contactBg = document.querySelector('.contact__bg');
+  if (contactBody && contactBg) {
+    const syncContactImage = () => {
+      contactBg.style.width = window.innerWidth <= 768 ? '' : `${contactBody.offsetHeight * 3 / 5}px`;
+    };
     syncContactImage();
     window.addEventListener('resize', syncContactImage);
-  })();
+    window.addEventListener('langchange', syncContactImage);
+    document.fonts?.ready.then(syncContactImage);
+  }
 })();
