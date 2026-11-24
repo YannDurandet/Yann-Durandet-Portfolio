@@ -1,0 +1,13 @@
+{
+  "name": "drndt-studio-devtools",
+  "private": true,
+  "type": "module",
+  "description": "Dev-only tooling (screenshots, checks, image/font prep). Nothing in here is deployed.",
+  "devDependencies": {
+    "@fontsource/michroma": "^5.2.0",
+    "@fontsource/rajdhani": "^5.2.0",
+    "@fontsource/share-tech-mono": "^5.2.0",
+    "playwright": "^1.50.0",
+    "sharp": "^0.34.0"
+  }
+}

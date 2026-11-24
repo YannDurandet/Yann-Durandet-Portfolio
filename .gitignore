@@ -3,6 +3,8 @@
 .env
 .env.*
 
-# Worker
-worker/node_modules/
-worker/.wrangler/
+# Dev-only artifacts (recreated by scripts/wrangler)
+node_modules/
+shots/
+.wrangler/
+.DS_Store
